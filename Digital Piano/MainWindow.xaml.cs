@@ -26,25 +26,17 @@ namespace Digital_Piano {
         private bool isMenuVisible = false;
 
         private void ToggleMenuButton_Click(object sender, RoutedEventArgs e) {
-            // Скрытие кнопки ToggleMenu
             ToggleMenuButton.Visibility = Visibility.Collapsed;
-
-            // Показ меню и Overlay
             Overlay.Visibility = Visibility.Visible;
             Storyboard showMenu = (Storyboard)FindResource("ShowMenuAnimation");
             showMenu.Begin();
-
             isMenuVisible = true;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e) {
-            // Здесь можно обработать сохранение всех данных (например, значений слайдеров)
             MessageBox.Show("Данные сохранены!");
-
-            // После сохранения закрываем меню
             Storyboard hideMenu = (Storyboard)FindResource("HideMenuAnimation");
             hideMenu.Completed += (s, ev) => {
-                // Скрываем меню и отображаем кнопку ToggleMenu
                 Overlay.Visibility = Visibility.Collapsed;
                 ToggleMenuButton.Visibility = Visibility.Visible;
             };

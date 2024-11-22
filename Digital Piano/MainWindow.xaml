@@ -12,28 +12,24 @@
 
     <Window.Resources>
 
-        <!-- Анимация для показа меню -->
         <Storyboard x:Key="ShowMenuAnimation">
             <DoubleAnimation Storyboard.TargetName="MenuPanel"
                              Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
                              From="-400" To="0"
                              Duration="0:0:0.3"
                              DecelerationRatio="0.9" />
-            <!-- Анимация для показа перекрывающего слоя -->
             <DoubleAnimation Storyboard.TargetName="Overlay"
                              Storyboard.TargetProperty="Opacity"
                              From="0" To="0.5"
                              Duration="0:0:0.3" />
         </Storyboard>
 
-        <!-- Анимация для скрытия меню -->
         <Storyboard x:Key="HideMenuAnimation">
             <DoubleAnimation Storyboard.TargetName="MenuPanel"
                              Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
                              From="0" To="-400"
                              Duration="0:0:0.3"
                              AccelerationRatio="0.9" />
-            <!-- Анимация для скрытия перекрывающего слоя -->
             <DoubleAnimation Storyboard.TargetName="Overlay"
                              Storyboard.TargetProperty="Opacity"
                              From="0.5" To="0"
@@ -107,7 +103,19 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-      
+
+        <Style x:Key="SideBarMenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="DarkSlateGray" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,30" />
+        </Style>
+
     </Window.Resources>
 
 
@@ -124,14 +132,12 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel x:Name="VolumeSliderPanel" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left">
-                    <!-- Текстовый блок для отображения громкости -->
                     <TextBlock x:Name="VolumeLabel"
                     Text="Volume: 50%"
                     FontSize="16"
                     HorizontalAlignment="Center"
                     Margin="0,0,0,10" />
-
-                    <!-- Слайдер для регулировки громкости -->
+                    
                     <Slider x:Name="VolumeSlider"
                     Minimum="0"
                     Maximum="100"
@@ -144,10 +150,7 @@
                     Width="300"
                     Height="30"
                     ValueChanged="VolumeSlider_ValueChanged">
-
-                        <!-- Стилизация дорожки слайдера -->
                         <Slider.Resources>
-                            <!-- Стилизация Thumb (ползунка) -->
                             <Style TargetType="Thumb">
                                 <Setter Property="Width" Value="15"/>
                                 <Setter Property="Height" Value="15"/>
@@ -157,7 +160,6 @@
                             </Style>
                         </Slider.Resources>
 
-                        <!-- Стилизация Track (дорожки слайдера) -->
                         <Slider.Template>
                             <ControlTemplate TargetType="Slider">
                                 <Grid>
@@ -280,47 +282,67 @@
 
         </Grid>
 
-        <!-- Перекрывающий слой, который блокирует взаимодействие с остальными элементами -->
         <Border x:Name="Overlay"
                 Background="Black"
                 Opacity="0"
                 Visibility="Collapsed"
                 Panel.ZIndex="2" />
 
-        <!-- Меню, которое выезжает поверх всех элементов -->
         <Grid x:Name="MenuPanel"
               Width="400"
-              Background="LightGray"
+              Background="Transparent"
               HorizontalAlignment="Left"
               RenderTransformOrigin="0.5,0.5"
               Panel.ZIndex="3">
-            <!-- Трансформация для анимации выезда -->
             <Grid.RenderTransform>
                 <TranslateTransform X="-400" />
             </Grid.RenderTransform>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <Border Background="DarkSlateGray" BorderBrush="Black" BorderThickness="1" CornerRadius="0,0,15,15">
+                    <TextBlock Text="РАСШИРЕННЫЕ НАСТРОЙКИ"
+                       HorizontalAlignment="Center"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       Foreground="White"
+                       Margin="30,30" />
+                </Border>
 
-            <!-- Содержимое меню (слайдеры и другие элементы) -->
-            <StackPanel Margin="10">
-                <TextBlock Text="РАСШИРЕННЫЕ НАСТРОЙКИ"
-                           FontSize="20"
-                           FontWeight="Bold"
-                           Margin="0,0,0,10" />
-
-                <!-- Здесь можно разместить ваши слайдеры или другие элементы -->
-
-                <!-- Кнопка Сохранить -->
                 <Button x:Name="SaveButton"
-                        Content="СОХРАНИТЬ"
-                        Width="150"
-                        Height="50"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Margin="20"
-                        Click="SaveButton_Click" />
+                Content="СОХРАНИТЬ"
+                Width="150"
+                Height="50"
+                Style="{StaticResource SideBarMenuButtonStyle}"
+                Click="SaveButton_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="15,15,15,15">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
             </StackPanel>
-        </Grid>
 
-        <!-- Кнопка для управления показом меню -->
+            <Border Grid.Row="1"
+            Background="DarkSlateGray"
+            BorderBrush="Black"
+            BorderThickness="1"
+            CornerRadius="15,15,0,0">
+                <TextBlock Text="ПОЛЗУНКИ И КРУТИЛКИ"
+                   HorizontalAlignment="Center"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Foreground="White"
+                   Margin="0,30" />
+            </Border>
+        </Grid>
         <Button x:Name="ToggleMenuButton"
                 Content="НАСТРОЙКИ"
                 Width="100"
