@@ -18,55 +18,38 @@ namespace Digital_Piano {
 
         public MainWindow() {
             piano = new Piano();
+
             InitializeComponent();
         }
 
-        bool isNotesNamesVisible = true;
+        private bool isNotesNamesVisible = true;
         private bool isMenuVisible = false;
 
         private void ToggleMenuButton_Click(object sender, RoutedEventArgs e) {
-            if (isMenuVisible) {
-                CloseMenu();
-            }
-            else {
-                OpenMenu();
-            }
-        }
-
-        private void OpenMenu() {
             // Скрытие кнопки ToggleMenu
             ToggleMenuButton.Visibility = Visibility.Collapsed;
 
             // Показ меню и Overlay
             Overlay.Visibility = Visibility.Visible;
-
-            // Запуск анимации для открытия меню
             Storyboard showMenu = (Storyboard)FindResource("ShowMenuAnimation");
             showMenu.Begin();
 
             isMenuVisible = true;
         }
 
-        private void CloseMenu() {
-            // Закрытие меню
+        private void SaveButton_Click(object sender, RoutedEventArgs e) {
+            // Здесь можно обработать сохранение всех данных (например, значений слайдеров)
+            MessageBox.Show("Данные сохранены!");
+
+            // После сохранения закрываем меню
             Storyboard hideMenu = (Storyboard)FindResource("HideMenuAnimation");
-            hideMenu.Completed += (s, ev) =>
-            {
-                // Скрытие Overlay и кнопки ToggleMenu
+            hideMenu.Completed += (s, ev) => {
+                // Скрываем меню и отображаем кнопку ToggleMenu
                 Overlay.Visibility = Visibility.Collapsed;
                 ToggleMenuButton.Visibility = Visibility.Visible;
             };
             hideMenu.Begin();
-
             isMenuVisible = false;
-        }
-
-        private void SaveButton_Click(object sender, RoutedEventArgs e) {
-            // Обработка сохранения данных
-            MessageBox.Show("Данные сохранены!");
-
-            // Закрыть меню после сохранения
-            CloseMenu();
         }
 
         private void KeyClick(object sender, RoutedEventArgs e) {

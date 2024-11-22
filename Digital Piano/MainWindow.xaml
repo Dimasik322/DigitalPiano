@@ -5,47 +5,39 @@
          
         Title="Digital Piano"
         WindowState="Maximized"
-        Topmost="True"
-        ResizeMode="NoResize" 
+        Topmost="True" 
         Height="1080" 
         Width="1920"
         Background="White">
 
     <Window.Resources>
-        <!-- Анимация для показа бокового меню -->
-        <Storyboard x:Key="ShowSidebarMenu">
-            <DoubleAnimation Storyboard.TargetName="SidebarMenu"
+
+        <!-- Анимация для показа меню -->
+        <Storyboard x:Key="ShowMenuAnimation">
+            <DoubleAnimation Storyboard.TargetName="MenuPanel"
                              Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
                              From="-400" To="0"
                              Duration="0:0:0.3"
                              DecelerationRatio="0.9" />
-            <!-- Анимация для затемнения фона при открытии меню -->
+            <!-- Анимация для показа перекрывающего слоя -->
             <DoubleAnimation Storyboard.TargetName="Overlay"
                              Storyboard.TargetProperty="Opacity"
                              From="0" To="0.5"
                              Duration="0:0:0.3" />
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Overlay"
-                                           Storyboard.TargetProperty="Visibility">
-                <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
-            </ObjectAnimationUsingKeyFrames>
         </Storyboard>
 
-        <!-- Анимация для скрытия бокового меню -->
-        <Storyboard x:Key="HideSidebarMenu">
-            <DoubleAnimation Storyboard.TargetName="SidebarMenu"
+        <!-- Анимация для скрытия меню -->
+        <Storyboard x:Key="HideMenuAnimation">
+            <DoubleAnimation Storyboard.TargetName="MenuPanel"
                              Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
                              From="0" To="-400"
                              Duration="0:0:0.3"
                              AccelerationRatio="0.9" />
-            <!-- Анимация для исчезновения фона при закрытии меню -->
+            <!-- Анимация для скрытия перекрывающего слоя -->
             <DoubleAnimation Storyboard.TargetName="Overlay"
                              Storyboard.TargetProperty="Opacity"
                              From="0.5" To="0"
                              Duration="0:0:0.3" />
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Overlay"
-                                           Storyboard.TargetProperty="Visibility">
-                <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed" />
-            </ObjectAnimationUsingKeyFrames>
         </Storyboard>
 
         <Style x:Key="WhiteKeyStyle" TargetType="Button">
@@ -119,71 +111,28 @@
     </Window.Resources>
 
 
-    <Grid x:Name="MainContent">
+    <Grid>
 
-        <!-- Перекрывающий слой, блокирующий взаимодействие с другими элементами -->
-        <Border x:Name="Overlay"
-                Background="Black"
-                Opacity="0"
-                Visibility="Collapsed"
-                Panel.ZIndex="2" />
+        <Grid x:Name="MainContent">
 
-        <!-- Всплывающее боковое меню -->
-        <Grid x:Name="SidebarMenu"
-              Width="400"
-              Background="LightGray"
-              HorizontalAlignment="Left"
-              RenderTransformOrigin="0.5,0.5"
-              Panel.ZIndex="3">
-            <Grid.RenderTransform>
-                <TranslateTransform X="-400" />
-            </Grid.RenderTransform>
+            <Grid x:Name="BasicConrols" Margin="100, 100, 0, 100">
 
-            <StackPanel Margin="10">
-                <TextBlock Text="Расширенные настройки"
-                           FontSize="20"
-                           FontWeight="Bold"
-                           Margin="0,0,0,10" />
-                <Button x:Name="SaveButton"
-                        Content="Сохранить"
-                        Width="100"
-                        Height="30"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Margin="0"
-                        Click="SaveButton_Click" />
-            </StackPanel>
-        </Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
 
-        <!-- Кнопка для отображения бокового меню -->
-        <Button x:Name="ToggleMenuButton"
-                Content="Toggle Menu"
-                Width="100"
-                Height="30"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Margin="10"
-                Click="ToggleMenuButton_Click"
-                Panel.ZIndex="4" />
-
-        <Grid x:Name="BasicConrols" Margin="100, 100, 0, 100">
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-
-            <StackPanel x:Name="VolumeSliderPanel" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left">
-                <!-- Текстовый блок для отображения громкости -->
-                <TextBlock x:Name="VolumeLabel"
+                <StackPanel x:Name="VolumeSliderPanel" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <!-- Текстовый блок для отображения громкости -->
+                    <TextBlock x:Name="VolumeLabel"
                     Text="Volume: 50%"
                     FontSize="16"
                     HorizontalAlignment="Center"
                     Margin="0,0,0,10" />
 
-                <!-- Слайдер для регулировки громкости -->
-                <Slider x:Name="VolumeSlider"
+                    <!-- Слайдер для регулировки громкости -->
+                    <Slider x:Name="VolumeSlider"
                     Minimum="0"
                     Maximum="100"
                     Value="50"
@@ -196,140 +145,192 @@
                     Height="30"
                     ValueChanged="VolumeSlider_ValueChanged">
 
-                    <!-- Стилизация дорожки слайдера -->
-                    <Slider.Resources>
-                        <!-- Стилизация Thumb (ползунка) -->
-                        <Style TargetType="Thumb">
-                            <Setter Property="Width" Value="15"/>
-                            <Setter Property="Height" Value="15"/>
-                            <Setter Property="Background" Value="DodgerBlue"/>
-                            <Setter Property="BorderBrush" Value="Gray"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                        </Style>
-                    </Slider.Resources>
+                        <!-- Стилизация дорожки слайдера -->
+                        <Slider.Resources>
+                            <!-- Стилизация Thumb (ползунка) -->
+                            <Style TargetType="Thumb">
+                                <Setter Property="Width" Value="15"/>
+                                <Setter Property="Height" Value="15"/>
+                                <Setter Property="Background" Value="DodgerBlue"/>
+                                <Setter Property="BorderBrush" Value="Gray"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                            </Style>
+                        </Slider.Resources>
 
-                    <!-- Стилизация Track (дорожки слайдера) -->
-                    <Slider.Template>
-                        <ControlTemplate TargetType="Slider">
-                            <Grid>
-                                <Track Name="PART_Track">
-                                    <Track.DecreaseRepeatButton>
-                                        <RepeatButton Command="Slider.DecreaseLarge" 
+                        <!-- Стилизация Track (дорожки слайдера) -->
+                        <Slider.Template>
+                            <ControlTemplate TargetType="Slider">
+                                <Grid>
+                                    <Track Name="PART_Track">
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Command="Slider.DecreaseLarge" 
                               Style="{x:Null}" 
                               IsEnabled="False" 
                               Height="4" 
                               Background="LightGray"/>
-                                    </Track.DecreaseRepeatButton>
-                                    <Track.Thumb>
-                                        <Thumb Style="{StaticResource {x:Type Thumb}}"/>
-                                    </Track.Thumb>
-                                    <Track.IncreaseRepeatButton>
-                                        <RepeatButton Command="Slider.IncreaseLarge" 
+                                        </Track.DecreaseRepeatButton>
+                                        <Track.Thumb>
+                                            <Thumb Style="{StaticResource {x:Type Thumb}}"/>
+                                        </Track.Thumb>
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Command="Slider.IncreaseLarge" 
                               Style="{x:Null}" 
                               IsEnabled="False" 
                               Height="4" 
                               Background="LightGray"/>
-                                    </Track.IncreaseRepeatButton>
-                                </Track>
-                            </Grid>
-                        </ControlTemplate>
-                    </Slider.Template>
-                </Slider>
-            </StackPanel>
-            
-        </Grid>
+                                        </Track.IncreaseRepeatButton>
+                                    </Track>
+                                </Grid>
+                            </ControlTemplate>
+                        </Slider.Template>
+                    </Slider>
+                </StackPanel>
 
-        <Grid x:Name="Keys">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+            </Grid>
 
-            <Grid>
+            <Grid x:Name="Keys">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
 
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
 
-                <Button Grid.Column="0" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="C" Tag="-9" Click="KeyClick"/>
-                <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="D" Tag="-7" Click="KeyClick"/>
-                <Button Grid.Column="2" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="E" Tag="-5" Click="KeyClick"/>
-                <Button Grid.Column="3" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="F" Tag="-4" Click="KeyClick"/>
-                <Button Grid.Column="4" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="G" Tag="-2" Click="KeyClick"/>
-                <Button Grid.Column="5" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="A" Tag="0" Click="KeyClick"/>
-                <Button Grid.Column="6" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="B" Tag="2" Click="KeyClick"/>
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="7" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="C" Tag="3" Click="KeyClick"/>
-                <Button Grid.Column="8" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="D" Tag="5" Click="KeyClick"/>
-                <Button Grid.Column="9" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="E" Tag="7" Click="KeyClick"/>
-                <Button Grid.Column="10" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="F" Tag="8" Click="KeyClick"/>
-                <Button Grid.Column="11" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="G" Tag="10" Click="KeyClick"/>
-                <Button Grid.Column="12" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="A" Tag="12" Click="KeyClick"/>
-                <Button Grid.Column="13" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="B" Tag="14" Click="KeyClick"/>
+                    <Button Grid.Column="0" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="C" Tag="-9" Click="KeyClick"/>
+                    <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="D" Tag="-7" Click="KeyClick"/>
+                    <Button Grid.Column="2" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="E" Tag="-5" Click="KeyClick"/>
+                    <Button Grid.Column="3" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="F" Tag="-4" Click="KeyClick"/>
+                    <Button Grid.Column="4" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="G" Tag="-2" Click="KeyClick"/>
+                    <Button Grid.Column="5" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="A" Tag="0" Click="KeyClick"/>
+                    <Button Grid.Column="6" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="B" Tag="2" Click="KeyClick"/>
 
-                <Button Grid.Column="14" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="C" Tag="15" Click="KeyClick"/>
+                    <Button Grid.Column="7" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="C" Tag="3" Click="KeyClick"/>
+                    <Button Grid.Column="8" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="D" Tag="5" Click="KeyClick"/>
+                    <Button Grid.Column="9" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="E" Tag="7" Click="KeyClick"/>
+                    <Button Grid.Column="10" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="F" Tag="8" Click="KeyClick"/>
+                    <Button Grid.Column="11" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="G" Tag="10" Click="KeyClick"/>
+                    <Button Grid.Column="12" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="A" Tag="12" Click="KeyClick"/>
+                    <Button Grid.Column="13" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="B" Tag="14" Click="KeyClick"/>
+
+                    <Button Grid.Column="14" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="C" Tag="15" Click="KeyClick"/>
+                </Grid>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10*" />
+                        <ColumnDefinition Width="20*" />
+                        <ColumnDefinition Width="5*" />
+                        <ColumnDefinition Width="20*" />
+                        <ColumnDefinition Width="20*" />
+                        <ColumnDefinition Width="20*" />
+                        <ColumnDefinition Width="5*" />
+                        <ColumnDefinition Width="20*" />
+                        <ColumnDefinition Width="5*" />
+                        <ColumnDefinition Width="20*" />
+                        <ColumnDefinition Width="20*" />
+
+                        <ColumnDefinition Width="20*" />
+                        <ColumnDefinition Width="5*" />
+                        <ColumnDefinition Width="20*" />
+                        <ColumnDefinition Width="20*" />
+                        <ColumnDefinition Width="20*" />
+                        <ColumnDefinition Width="5*" />
+                        <ColumnDefinition Width="20*" />
+                        <ColumnDefinition Width="5*" />
+                        <ColumnDefinition Width="20*" />
+
+                        <ColumnDefinition Width="32*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="1" Style="{StaticResource BlackKeyStyle}" Content="C#" Tag="-8" Click="KeyClick"/>
+                    <Button Grid.Column="3" Style="{StaticResource BlackKeyStyle}" Content="D#" Tag="-6" Click="KeyClick"/>
+                    <Button Grid.Column="5" Style="{StaticResource BlackKeyStyle}" Content="F#" Tag="-3" Click="KeyClick"/>
+                    <Button Grid.Column="7" Style="{StaticResource BlackKeyStyle}" Content="G#" Tag="-1" Click="KeyClick"/>
+                    <Button Grid.Column="9" Style="{StaticResource BlackKeyStyle}" Content="A#" Tag="1" Click="KeyClick"/>
+
+                    <Button Grid.Column="11" Style="{StaticResource BlackKeyStyle}" Content="C#" Tag="4" Click="KeyClick"/>
+                    <Button Grid.Column="13" Style="{StaticResource BlackKeyStyle}" Content="D#" Tag="6" Click="KeyClick"/>
+                    <Button Grid.Column="15" Style="{StaticResource BlackKeyStyle}" Content="F#" Tag="9" Click="KeyClick"/>
+                    <Button Grid.Column="17" Style="{StaticResource BlackKeyStyle}" Content="G#" Tag="11" Click="KeyClick"/>
+                    <Button Grid.Column="19" Style="{StaticResource BlackKeyStyle}" Content="A#" Tag="13" Click="KeyClick"/>
+                </Grid>
             </Grid>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="10*" />
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="5*" />
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="5*" />
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="5*" />
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="20*" />
-
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="5*" />
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="5*" />
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="5*" />
-                    <ColumnDefinition Width="20*" />
-
-                    <ColumnDefinition Width="32*" />
-                </Grid.ColumnDefinitions>
-
-                <Button Grid.Column="1" Style="{StaticResource BlackKeyStyle}" Content="C#" Tag="-8" Click="KeyClick"/>
-                <Button Grid.Column="3" Style="{StaticResource BlackKeyStyle}" Content="D#" Tag="-6" Click="KeyClick"/>
-                <Button Grid.Column="5" Style="{StaticResource BlackKeyStyle}" Content="F#" Tag="-3" Click="KeyClick"/>
-                <Button Grid.Column="7" Style="{StaticResource BlackKeyStyle}" Content="G#" Tag="-1" Click="KeyClick"/>
-                <Button Grid.Column="9" Style="{StaticResource BlackKeyStyle}" Content="A#" Tag="1" Click="KeyClick"/>
-
-                <Button Grid.Column="11" Style="{StaticResource BlackKeyStyle}" Content="C#" Tag="4" Click="KeyClick"/>
-                <Button Grid.Column="13" Style="{StaticResource BlackKeyStyle}" Content="D#" Tag="6" Click="KeyClick"/>
-                <Button Grid.Column="15" Style="{StaticResource BlackKeyStyle}" Content="F#" Tag="9" Click="KeyClick"/>
-                <Button Grid.Column="17" Style="{StaticResource BlackKeyStyle}" Content="G#" Tag="11" Click="KeyClick"/>
-                <Button Grid.Column="19" Style="{StaticResource BlackKeyStyle}" Content="A#" Tag="13" Click="KeyClick"/>
-            </Grid>
         </Grid>
 
-        
+        <!-- Перекрывающий слой, который блокирует взаимодействие с остальными элементами -->
+        <Border x:Name="Overlay"
+                Background="Black"
+                Opacity="0"
+                Visibility="Collapsed"
+                Panel.ZIndex="2" />
+
+        <!-- Меню, которое выезжает поверх всех элементов -->
+        <Grid x:Name="MenuPanel"
+              Width="400"
+              Background="LightGray"
+              HorizontalAlignment="Left"
+              RenderTransformOrigin="0.5,0.5"
+              Panel.ZIndex="3">
+            <!-- Трансформация для анимации выезда -->
+            <Grid.RenderTransform>
+                <TranslateTransform X="-400" />
+            </Grid.RenderTransform>
+
+            <!-- Содержимое меню (слайдеры и другие элементы) -->
+            <StackPanel Margin="10">
+                <TextBlock Text="РАСШИРЕННЫЕ НАСТРОЙКИ"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Margin="0,0,0,10" />
+
+                <!-- Здесь можно разместить ваши слайдеры или другие элементы -->
+
+                <!-- Кнопка Сохранить -->
+                <Button x:Name="SaveButton"
+                        Content="СОХРАНИТЬ"
+                        Width="150"
+                        Height="50"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="20"
+                        Click="SaveButton_Click" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Кнопка для управления показом меню -->
+        <Button x:Name="ToggleMenuButton"
+                Content="НАСТРОЙКИ"
+                Width="100"
+                Height="30"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10"
+                Click="ToggleMenuButton_Click"
+                Panel.ZIndex="4" />
+
     </Grid>
 
 </Window>
