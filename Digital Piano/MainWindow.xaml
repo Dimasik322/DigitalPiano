@@ -185,12 +185,33 @@
             </Setter>
         </Style>
 
-        <Style x:Key="SliderContainerStyle" TargetType="Border">
+        <Style x:Key="ContainerStyle" TargetType="Border">
             <Setter Property="BorderBrush" Value="#162812"/>
             <Setter Property="Background" Value="#6b7050"/>
             <Setter Property="BorderThickness" Value="3"/>
             <Setter Property="CornerRadius" Value="10"/>
             <Setter Property="Padding" Value="10"/>
+        </Style>
+
+        <Style x:Key="ChangeButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="#6b7050" />
+            <Setter Property="Foreground" Value="#162812" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="#eae1d2" />
+            <Setter Property="Foreground" Value="#162812" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="FontSize" Value="18"/>
         </Style>
 
         <Style x:Key="SliderThumbStyle" TargetType="Thumb">
@@ -248,25 +269,25 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel x:Name="VolumeSliderPanel" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left">
-                    <Border Style="{StaticResource SliderContainerStyle}">
+                    <Border Style="{StaticResource ContainerStyle}">
                         <StackPanel>
                             <TextBlock Text="ГРОМКОСТЬ" Style="{StaticResource LabelText}"/>
 
                             <Slider x:Name="VolumeSlider"
-                            Minimum="0"
-                            Maximum="100"
-                            Value="50"
-                            TickFrequency="10"
-                            IsSnapToTickEnabled="True"
-                            AutoToolTipPlacement="TopLeft"
-                            AutoToolTipPrecision="0"
-                            HorizontalAlignment="Center"
-                            Width="300"
-                            Height="30"
-                            ValueChanged="VolumeSlider_ValueChanged">
+                                Minimum="0"
+                                Maximum="100"
+                                Value="50"
+                                TickFrequency="10"
+                                IsSnapToTickEnabled="True"
+                                AutoToolTipPlacement="TopLeft"
+                                AutoToolTipPrecision="0"
+                                HorizontalAlignment="Center"
+                                Width="300"
+                                Height="30"
+                                ValueChanged="VolumeSlider_ValueChanged">
                                 <Slider.Resources>
                                     <Style TargetType="Thumb" BasedOn="{StaticResource SliderThumbStyle}" />
-                                    <Style TargetType="Border" BasedOn="{StaticResource SliderContainerStyle}" />
+                                    <Style TargetType="Border" BasedOn="{StaticResource ContainerStyle}" />
                                 </Slider.Resources>
                                 <Slider.Template>
                                     <ControlTemplate TargetType="Slider">
@@ -274,21 +295,18 @@
                                             <Track Name="PART_Track">
                                                 <Track.DecreaseRepeatButton>
                                                     <RepeatButton Command="Slider.DecreaseLarge" 
-                                  Style="{x:Null}" 
-                                  IsEnabled="False" 
-                                  Height="4" 
-                                  Background="#eae1d2"/>
+                                                      Style="{x:Null}" 
+                                                      IsEnabled="False" 
+                                                      Height="4" 
+                                                      Background="#eae1d2"/>    
                                                 </Track.DecreaseRepeatButton>
-
                                                 <Track.IncreaseRepeatButton>
                                                     <RepeatButton Command="Slider.IncreaseLarge" 
-                                  Style="{x:Null}" 
-                                  IsEnabled="False" 
-                                  Height="4" 
-                                  Background="#eae1d2"/>
+                                                      Style="{x:Null}" 
+                                                      IsEnabled="False" 
+                                                      Height="4" 
+                                                      Background="#eae1d2"/>    
                                                 </Track.IncreaseRepeatButton>
-
-                                                <!-- Здесь добавьте Track.Thumb, чтобы указать ползунок -->
                                                 <Track.Thumb>
                                                     <Thumb Style="{StaticResource SliderThumbStyle}" VerticalAlignment="Center" />
                                                 </Track.Thumb>
@@ -300,7 +318,58 @@
                         </StackPanel>
                     </Border>
                 </StackPanel>
-                
+
+                <StackPanel x:Name="SustainSlidePanel" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <Border Style="{StaticResource ContainerStyle}">
+                        <StackPanel>
+                            <TextBlock Text="СУСТЕЙН" Style="{StaticResource LabelText}"/>
+
+                            <Slider x:Name="SustainSlider"
+                                Minimum="0"
+                                Maximum="2"
+                                Value="0"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                AutoToolTipPlacement="TopLeft"
+                                AutoToolTipPrecision="0"
+                                HorizontalAlignment="Center"
+                                Width="300"
+                                Height="30"
+                                ValueChanged="SustainSlider_ValueChanged">
+                                <Slider.Resources>
+                                    <Style TargetType="Thumb" BasedOn="{StaticResource SliderThumbStyle}" />
+                                    <Style TargetType="Border" BasedOn="{StaticResource ContainerStyle}" />
+                                </Slider.Resources>
+                                <Slider.Template>
+                                    <ControlTemplate TargetType="Slider">
+                                        <Grid>
+                                            <Track Name="PART_Track">
+                                                <Track.DecreaseRepeatButton>
+                                                    <RepeatButton Command="Slider.DecreaseLarge" 
+                                                      Style="{x:Null}" 
+                                                      IsEnabled="False" 
+                                                      Height="4" 
+                                                      Background="#eae1d2"/>
+                                                </Track.DecreaseRepeatButton>
+                                                <Track.IncreaseRepeatButton>
+                                                    <RepeatButton Command="Slider.IncreaseLarge" 
+                                                      Style="{x:Null}" 
+                                                      IsEnabled="False" 
+                                                      Height="4" 
+                                                      Background="#eae1d2"/>
+                                                </Track.IncreaseRepeatButton>
+                                                <Track.Thumb>
+                                                    <Thumb Style="{StaticResource SliderThumbStyle}" VerticalAlignment="Center" />
+                                                </Track.Thumb>
+                                            </Track>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Slider.Template>
+                            </Slider>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
             </Grid>
 
             <Grid x:Name="Keys">
@@ -418,9 +487,9 @@
             <StackPanel>
                 <Border Background="#eae1d2" BorderBrush="#162812" BorderThickness="0,4,4,4" CornerRadius="0,15,15,0">
                     <StackPanel Margin="30,30,30,30">
-                        
+
                         <TextBlock Text="РАСШИРЕННЫЕ НАСТРОЙКИ" Style="{StaticResource BasicText}"/>
-                        
+
                         <Button x:Name="SaveButton"
                             Content="СОХРАНИТЬ"
                             Width="150"
@@ -438,9 +507,65 @@
                                 </ControlTemplate>
                             </Button.Template>
                         </Button>
-                        
-                        <TextBlock Text="ПОЛЗУНКИ И КРУТИЛКИ" Style="{StaticResource BasicText}"/>
-                        
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="4*" />
+                                <ColumnDefinition Width="6*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="ЧАСТОТА" Style="{StaticResource BasicText}" HorizontalAlignment="Left"/>
+                            <StackPanel Grid.Column="1" Grid.Row="0" x:Name="FreqInputPanel">
+                                <Border Style="{StaticResource ContainerStyle}">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Style="{StaticResource ChangeButtonStyle}" Click="DecreaseFreqValue">
+                                            <TextBlock Text="&#9665;" FontSize="20"/>
+                                        </Button>
+                                        <TextBox x:Name="FreqInputField" Style="{StaticResource TextBoxStyle}" Text="440.0"/>
+                                        <Button Style="{StaticResource ChangeButtonStyle}" Click="IncreaseFreqValue">
+                                            <TextBlock Text="&#9655;" FontSize="20"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="0" Grid.Row="1" Text="РЕВЕРБ" Style="{StaticResource BasicText}" HorizontalAlignment="Left"/>
+                            <StackPanel Grid.Column="1" Grid.Row="1" x:Name="ReverbInputPanel">
+                                <Border Style="{StaticResource ContainerStyle}">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Style="{StaticResource ChangeButtonStyle}" Click="DecreaseReverbValue">
+                                            <TextBlock Text="&#9665;" FontSize="20"/>
+                                        </Button>
+                                        <TextBox x:Name="ReverbInputField" Style="{StaticResource TextBoxStyle}" Text="1"/>
+                                        <Button Style="{StaticResource ChangeButtonStyle}" Click="IncreaseReverbValue">
+                                            <TextBlock Text="&#9655;" FontSize="20"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="0" Grid.Row="2" Text="ХОРУС" Style="{StaticResource BasicText}" HorizontalAlignment="Left"/>
+                            <StackPanel Grid.Column="1" Grid.Row="2" x:Name="ChorusInputPanel">
+                                <Border Style="{StaticResource ContainerStyle}">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Style="{StaticResource ChangeButtonStyle}" Click="DecreaseChorusValue">
+                                            <TextBlock Text="&#9665;" FontSize="20"/>
+                                        </Button>
+                                        <TextBox x:Name="ChorusInputField" Style="{StaticResource TextBoxStyle}" Text="0"/>
+                                        <Button Style="{StaticResource ChangeButtonStyle}" Click="IncreaseChorusValue">
+                                            <TextBlock Text="&#9655;" FontSize="20"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+
+                        </Grid>
                     </StackPanel>
                 </Border>
             </StackPanel>

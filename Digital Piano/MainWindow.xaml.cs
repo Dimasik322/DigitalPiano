@@ -60,5 +60,49 @@ namespace Digital_Piano {
                 piano.volume = newVolume;
             }
         }
+
+        private void SustainSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            if (SustainSlider != null) {
+                uint newSustainLevel = (uint)SustainSlider.Value;
+                piano.sustain = newSustainLevel;
+            }
+        }
+
+        private void DecreaseFreqValue(object sender, RoutedEventArgs e) {
+            double value = double.Parse(FreqInputField.Text);
+            value -= 0.1;
+            FreqInputField.Text = value.ToString();
+        }
+
+        private void IncreaseFreqValue(object sender, RoutedEventArgs e) {
+            double value = int.Parse(FreqInputField.Text);
+            value += 0.1;
+            FreqInputField.Text = value.ToString();
+        }
+
+        private void DecreaseReverbValue(object sender, RoutedEventArgs e) {
+            uint value = uint.Parse(ReverbInputField.Text);
+            value -= 1;
+            ReverbInputField.Text = value.ToString();
+        }
+
+        private void IncreaseReverbValue(object sender, RoutedEventArgs e) {
+            uint value = uint.Parse(ReverbInputField.Text);
+            value += 1;
+            ReverbInputField.Text = value.ToString();
+        }
+
+        private void DecreaseChorusValue(object sender, RoutedEventArgs e) {
+            uint value = uint.Parse(ChorusInputField.Text);
+            value -= 1;
+            ChorusInputField.Text = value.ToString();
+        }
+
+        private void IncreaseChorusValue(object sender, RoutedEventArgs e) {
+            uint value = uint.Parse(ChorusInputField.Text);
+            value += 1;
+            ChorusInputField.Text = value.ToString();
+        }
+
     }
 }

@@ -11,7 +11,7 @@ namespace Digital_Piano {
     public class Piano {
         protected const int SampleRate = 44100;
         protected double basefreq;
-        protected uint sustain;
+        public uint sustain;
         protected uint reverb;
         protected uint chorus;
         public int volume;
@@ -33,19 +33,15 @@ namespace Digital_Piano {
         public void PlayTone(int semitoneOffset, double durationSeconds) {
             int samplesCount = (int)(SampleRate * durationSeconds);
             var buffer = new float[samplesCount];
-
-            // Генерация синусоиды для нужной частоты
             for (int i = 0; i < samplesCount; i++) {
                 buffer[i] = (float)Math.Sin(2 * Math.PI * GetNoteFrequency(semitoneOffset) * i / SampleRate);
             }
-
-            // Используем WaveOutEvent для воспроизведения
             using (var waveOut = new WaveOutEvent()) {
                 var waveProvider = new BufferedWaveProvider(WaveFormat.CreateIeeeFloatWaveFormat(SampleRate, 1));
                 waveProvider.AddSamples(GetByteArrayFromFloatArray(buffer), 0, buffer.Length * sizeof(float));
                 waveOut.Init(waveProvider);
                 waveOut.Play();
-                Thread.Sleep((int)(durationSeconds * 1000)); // Задержка для завершения воспроизведения
+                Thread.Sleep((int)(durationSeconds * 1000));
             }
         }
         private byte[] GetByteArrayFromFloatArray(float[] buffer) {
