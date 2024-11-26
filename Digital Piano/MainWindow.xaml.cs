@@ -58,9 +58,6 @@ namespace Digital_Piano {
             if (VolumeSlider != null) {
                 int newVolume = (int)VolumeSlider.Value;
                 piano.volume = newVolume;
-                if (VolumeLabel != null) {
-                    VolumeLabel.Text = $"Volume: {newVolume}%";
-                }
             }
         }
     }
