@@ -15,7 +15,7 @@
                              From="-400" To="0"
                              Duration="0:0:0.3"
                              DecelerationRatio="0.9" />
-            <DoubleAnimation Storyboard.TargetName="Overlay"
+            <DoubleAnimation Storyboard.TargetName="OverlayMenu"
                              Storyboard.TargetProperty="Opacity"
                              From="0" To="0.5"
                              Duration="0:0:0.3" />
@@ -27,7 +27,31 @@
                              From="0" To="-400"
                              Duration="0:0:0.3"
                              AccelerationRatio="0.9" />
-            <DoubleAnimation Storyboard.TargetName="Overlay"
+            <DoubleAnimation Storyboard.TargetName="OverlayMenu"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0.5" To="0"
+                             Duration="0:0:0.3" />
+        </Storyboard>
+
+        <Storyboard x:Key="ShowExitMenuAnimation">
+            <DoubleAnimation Storyboard.TargetName="ExitMenuPanel"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                             From="-300" To="0"
+                             Duration="0:0:0.3"
+                             DecelerationRatio="0.9" />
+            <DoubleAnimation Storyboard.TargetName="OverlayExit"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0" To="0.5"
+                             Duration="0:0:0.3" />
+        </Storyboard>
+
+        <Storyboard x:Key="HideExitMenuAnimation">
+            <DoubleAnimation Storyboard.TargetName="ExitMenuPanel"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                             From="0" To="-300"
+                             Duration="0:0:0.3"
+                             AccelerationRatio="0.9" />
+            <DoubleAnimation Storyboard.TargetName="OverlayExit"
                              Storyboard.TargetProperty="Opacity"
                              From="0.5" To="0"
                              Duration="0:0:0.3" />
@@ -311,7 +335,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                
+
                 <StackPanel x:Name="VolumeSliderPanel" Grid.Column="0" VerticalAlignment="Top">
                     <Border Style="{StaticResource ControlsContainerStyle}">
                         <StackPanel>
@@ -341,14 +365,14 @@
                                                       Style="{x:Null}" 
                                                       IsEnabled="False" 
                                                       Height="4" 
-                                                      Background="#eae1d2"/>    
+                                                      Background="#eae1d2"/>
                                                 </Track.DecreaseRepeatButton>
                                                 <Track.IncreaseRepeatButton>
                                                     <RepeatButton Command="Slider.IncreaseLarge" 
                                                       Style="{x:Null}" 
                                                       IsEnabled="False" 
                                                       Height="4" 
-                                                      Background="#eae1d2"/>    
+                                                      Background="#eae1d2"/>
                                                 </Track.IncreaseRepeatButton>
                                                 <Track.Thumb>
                                                     <Thumb Style="{StaticResource SliderThumbStyle}" VerticalAlignment="Center" />
@@ -525,13 +549,45 @@
 
         </Grid>
 
-        <!--Сделать выход из приложения по ESC-->
+        <Grid x:Name="OverlayMenu" Background="Black" Opacity="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Collapsed"/>
+        <Grid x:Name="OverlayExit" Background="Black" Opacity="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Collapsed"/>
 
-        <Border x:Name="Overlay"
-                Background="Black"
-                Opacity="0"
-                Visibility="Collapsed"
-                Panel.ZIndex="2" />
+        <Grid x:Name="ExitMenuPanel" Background="Transparent" Width="300" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center">
+            <Grid.RenderTransform>
+                <TranslateTransform Y="-300"/>
+            </Grid.RenderTransform>
+            <Border Background="#eae1d2" BorderBrush="#162812" BorderThickness="4,0,4,4" CornerRadius="0,0,15,15">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="ВЫЙТИ?" Style="{StaticResource BasicText}" Margin="0,50,0,0"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="ДА" Width="100" Height="40" Style="{StaticResource SideBarMenuButtonStyle}" Click="YesButton_Click" Margin="0,0,20,0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="15,15,15,15">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                        <Button Content="НЕТ" Width="100" Height="40" Style="{StaticResource SideBarMenuButtonStyle}" Click="NoButton_Click">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="15,15,15,15">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
 
         <Grid x:Name="MenuPanel"
               Width="400"
@@ -549,7 +605,7 @@
 
             <StackPanel>
                 <Border Background="#eae1d2" BorderBrush="#162812" BorderThickness="0,4,4,4" CornerRadius="0,15,15,0">
-                    <StackPanel Margin="30,30,30,30">
+                    <StackPanel Margin="30">
 
                         <TextBlock Text="РАСШИРЕННЫЕ НАСТРОЙКИ" Style="{StaticResource BasicText}"/>
 
@@ -564,7 +620,7 @@
                                     <Border Background="{TemplateBinding Background}"
                                         BorderBrush="{TemplateBinding BorderBrush}"
                                         BorderThickness="{TemplateBinding BorderThickness}"
-                                        CornerRadius="15,15,15,15">
+                                        CornerRadius="15">
                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                 </ControlTemplate>
@@ -662,6 +718,7 @@
                             <!--Сделать кнопку "Помощь"-->
 
                         </Grid>
+                        
                     </StackPanel>
                 </Border>
             </StackPanel>
