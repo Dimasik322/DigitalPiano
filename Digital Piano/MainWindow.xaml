@@ -185,6 +185,8 @@
             </Setter>
         </Style>
 
+        <!--Сделать анимацию для кнопки при наведении-->
+
         <Style x:Key="ContainerStyle" TargetType="Border">
             <Setter Property="BorderBrush" Value="#162812"/>
             <Setter Property="Background" Value="#6b7050"/>
@@ -523,6 +525,8 @@
 
         </Grid>
 
+        <!--Сделать выход из приложения по ESC-->
+
         <Border x:Name="Overlay"
                 Background="Black"
                 Opacity="0"
@@ -576,6 +580,8 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Column="0" Grid.Row="0" Text="ЧАСТОТА" Style="{StaticResource BasicText}" HorizontalAlignment="Left"/>
@@ -622,6 +628,38 @@
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
+
+                            <TextBlock Grid.Column="0" Grid.Row="3" Text="ТЕМП" Style="{StaticResource BasicText}" HorizontalAlignment="Left"/>
+                            <StackPanel Grid.Column="1" Grid.Row="3" x:Name="MetroTempoInputPanel">
+                                <Border Style="{StaticResource ContainerStyle}">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Style="{StaticResource ChangeButtonStyle}" Click="DecreaseMetroTempoValue">
+                                            <TextBlock Text="&#9665;" FontSize="20"/>
+                                        </Button>
+                                        <TextBox x:Name="MetroTempoInputField" Style="{StaticResource TextBoxStyle}" Text="0"/>
+                                        <Button Style="{StaticResource ChangeButtonStyle}" Click="IncreaseMetroTempoValue">
+                                            <TextBlock Text="&#9655;" FontSize="20"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="0" Grid.Row="4" Text="РАЗМЕР" Style="{StaticResource BasicText}" HorizontalAlignment="Left"/>
+                            <StackPanel Grid.Column="1" Grid.Row="4" x:Name="MetroSignInputPanel">
+                                <Border Style="{StaticResource ContainerStyle}">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Style="{StaticResource ChangeButtonStyle}" Click="DecreaseMetroSignValue">
+                                            <TextBlock Text="&#9665;" FontSize="20"/>
+                                        </Button>
+                                        <TextBox x:Name="MetroSignInputField" Style="{StaticResource TextBoxStyle}" Text="0"/>
+                                        <Button Style="{StaticResource ChangeButtonStyle}" Click="IncreaseMetroSignValue">
+                                            <TextBlock Text="&#9655;" FontSize="20"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                            
+                            <!--Сделать кнопку "Помощь"-->
 
                         </Grid>
                     </StackPanel>

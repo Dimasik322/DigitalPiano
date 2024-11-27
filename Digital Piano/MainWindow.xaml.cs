@@ -15,6 +15,8 @@ namespace Digital_Piano {
     public partial class MainWindow : Window {
 
         private Piano piano;
+        //Сделать экземляр метронома
+        //Сделать обработку, проверку и сохранение изменений в полях
 
         public MainWindow() {
             piano = new Piano();
@@ -102,6 +104,30 @@ namespace Digital_Piano {
             uint value = uint.Parse(ChorusInputField.Text);
             value += 1;
             ChorusInputField.Text = value.ToString();
+        }
+
+        private void DecreaseMetroTempoValue(object sender, RoutedEventArgs e) {
+            uint value = uint.Parse(MetroTempoInputField.Text);
+            value -= 1;
+            ChorusInputField.Text = value.ToString();
+        }
+
+        private void IncreaseMetroTempoValue(object sender, RoutedEventArgs e) {
+            uint value = uint.Parse(MetroTempoInputField.Text);
+            value += 1;
+            ChorusInputField.Text = value.ToString();
+        }
+
+        private void DecreaseMetroSignValue(object sender, RoutedEventArgs e) {
+            uint value = uint.Parse(MetroSignInputField.Text);
+            value -= 1;
+            MetroSignInputField.Text = value.ToString();
+        }
+
+        private void IncreaseMetroSignValue(object sender, RoutedEventArgs e) {
+            uint value = uint.Parse(MetroSignInputField.Text);
+            value += 1;
+            MetroSignInputField.Text = value.ToString();
         }
 
     }

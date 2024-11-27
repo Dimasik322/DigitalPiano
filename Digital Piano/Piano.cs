@@ -8,6 +8,9 @@ using NAudio.Wave;
 
 
 namespace Digital_Piano {
+
+    //Сделать класс для метронома
+    //В нем сделать const словарь с размерами и генерацию звука по размеру и темпу
     public class Piano {
         protected const int SampleRate = 44100;
         protected double basefreq;
