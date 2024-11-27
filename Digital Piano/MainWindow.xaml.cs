@@ -27,10 +27,10 @@ namespace Digital_Piano {
         private bool isNotesNamesVisible = true;
         private bool isMenuVisible = false;
         private bool isExitMenuVisible = false;
+        private bool isInstructionsVisible = false;
 
         private void ToggleMenuButton_Click(object sender, RoutedEventArgs e) {
-            ToggleMenuButton.Visibility = Visibility.Collapsed;
-            OverlayMenu.Visibility = Visibility.Visible;
+            Overlay.Visibility = Visibility.Visible;
             Storyboard showMenu = (Storyboard)FindResource("ShowMenuAnimation");
             showMenu.Begin();
             isMenuVisible = true;
@@ -39,6 +39,10 @@ namespace Digital_Piano {
         protected override void OnKeyDown(KeyEventArgs e) {
             base.OnKeyDown(e);
             if (e.Key == Key.Escape) {
+                if (isInstructionsVisible) {
+                    HideHelpPanel();
+                    return;
+                }
                 if (isMenuVisible) {
                     HideSideBarMenu();
                     return;
@@ -48,31 +52,30 @@ namespace Digital_Piano {
                     return;
                 }
                 HideExitMenu();
+                return;
             }
         }
 
         private void HideSideBarMenu() {
             Storyboard hideMenu = (Storyboard)FindResource("HideMenuAnimation");
             hideMenu.Completed += (s, ev) => {
-                OverlayMenu.Visibility = Visibility.Collapsed;
-                ToggleMenuButton.Visibility = Visibility.Visible;
+                Overlay.Visibility = Visibility.Collapsed;
             };
             hideMenu.Begin();
             isMenuVisible = false;
         }
 
         private void ShowExitMenu() {
-            OverlayExit.Visibility = Visibility.Visible;
+            Overlay.Visibility = Visibility.Visible;
             Storyboard showMenu = (Storyboard)FindResource("ShowExitMenuAnimation");
             showMenu.Begin();
             isExitMenuVisible = true;
         }
-
         private void HideExitMenu() {
             Storyboard hideMenu = (Storyboard)FindResource("HideExitMenuAnimation");
             hideMenu.Completed += (s, e) =>
             {
-                OverlayExit.Visibility = Visibility.Collapsed;
+                Overlay.Visibility = Visibility.Collapsed;
             };
             hideMenu.Begin();
             isExitMenuVisible = false;
@@ -81,7 +84,6 @@ namespace Digital_Piano {
         private void YesButton_Click(object sender, RoutedEventArgs e) {
             Application.Current.Shutdown();
         }
-
         private void NoButton_Click(object sender, RoutedEventArgs e) {
             HideExitMenu();
         }
@@ -90,12 +92,34 @@ namespace Digital_Piano {
             MessageBox.Show("Данные сохранены!");
             Storyboard hideMenu = (Storyboard)FindResource("HideMenuAnimation");
             hideMenu.Completed += (s, ev) => {
-                OverlayMenu.Visibility = Visibility.Collapsed;
-                ToggleMenuButton.Visibility = Visibility.Visible;
+                Overlay.Visibility = Visibility.Collapsed;
             };
             hideMenu.Begin();
             isMenuVisible = false;
         }
+
+        private void HelpButton_Click(object sender, RoutedEventArgs e) {
+            if (isInstructionsVisible) {
+                HideHelpPanel();
+            }
+            else {
+                ShowHelpPanel();
+            }
+        }
+        private void HideHelpPanel() {
+            InstructionsPanel.Visibility = Visibility.Hidden;
+            Storyboard hideStoryboard = (Storyboard)FindResource("HideInstructionsAnimation");
+            hideStoryboard.Begin();
+            isInstructionsVisible = !isInstructionsVisible;
+        }
+        private void ShowHelpPanel() {
+            InstructionsPanel.Visibility = Visibility.Visible;
+            Storyboard showStoryboard = (Storyboard)FindResource("ShowInstructionsAnimation");
+            showStoryboard.Begin();
+            isInstructionsVisible = !isInstructionsVisible;
+        }
+
+
 
         private void KeyClick(object sender, RoutedEventArgs e) {
             Button clickedButton = sender as Button;
