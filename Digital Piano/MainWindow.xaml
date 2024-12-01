@@ -147,6 +147,10 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="NoteLabel" TargetType="TextBlock">
+            <Setter Property="Visibility" Value="Collapsed"/>
+        </Style>
+
         <Style x:Key="SideBarMenuButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#6b7050" />
             <Setter Property="Foreground" Value="#eae1d2" />
@@ -473,7 +477,7 @@
                     <Border Style="{StaticResource ControlsContainerStyle}">
                         <StackPanel>
                             <TextBlock Text="НАЗВАНИЯ" Style="{StaticResource LabelText}"/>
-                            <ToggleButton Style="{StaticResource SwitchStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <ToggleButton Style="{StaticResource SwitchStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="LabelShowClick"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -494,7 +498,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Grid>
+                <Grid x:Name="WhiteKeys">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
@@ -519,26 +523,56 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="C" Tag="-9" Click="KeyClick"/>
-                    <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="D" Tag="-7" Click="KeyClick"/>
-                    <Button Grid.Column="2" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="E" Tag="-5" Click="KeyClick"/>
-                    <Button Grid.Column="3" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="F" Tag="-4" Click="KeyClick"/>
-                    <Button Grid.Column="4" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="G" Tag="-2" Click="KeyClick"/>
-                    <Button Grid.Column="5" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="A" Tag="0" Click="KeyClick"/>
-                    <Button Grid.Column="6" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="B" Tag="2" Click="KeyClick"/>
+                    <Button Grid.Column="0" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-9" Click="KeyClick">
+                        <TextBlock Text="C" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-7" Click="KeyClick">
+                        <TextBlock Text="D" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="2" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-5" Click="KeyClick">
+                        <TextBlock Text="E" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="3" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-4" Click="KeyClick">
+                        <TextBlock Text="F" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="4" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-2" Click="KeyClick">
+                        <TextBlock Text="G" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="5" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="0" Click="KeyClick">
+                        <TextBlock Text="A" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="6" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="2" Click="KeyClick">
+                        <TextBlock Text="B" Style="{StaticResource NoteLabel}"/>
+                    </Button>
 
-                    <Button Grid.Column="7" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="C" Tag="3" Click="KeyClick"/>
-                    <Button Grid.Column="8" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="D" Tag="5" Click="KeyClick"/>
-                    <Button Grid.Column="9" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="E" Tag="7" Click="KeyClick"/>
-                    <Button Grid.Column="10" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="F" Tag="8" Click="KeyClick"/>
-                    <Button Grid.Column="11" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="G" Tag="10" Click="KeyClick"/>
-                    <Button Grid.Column="12" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="A" Tag="12" Click="KeyClick"/>
-                    <Button Grid.Column="13" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="B" Tag="14" Click="KeyClick"/>
+                    <Button Grid.Column="7" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="3" Click="KeyClick">
+                        <TextBlock Text="C" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="8" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="5" Click="KeyClick">
+                        <TextBlock Text="D" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="9" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="7" Click="KeyClick">
+                        <TextBlock Text="E" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="10" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="8" Click="KeyClick">
+                        <TextBlock Text="F" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="11" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="10" Click="KeyClick">
+                        <TextBlock Text="G" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="12" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="12" Click="KeyClick">
+                        <TextBlock Text="A" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="13" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="14" Click="KeyClick">
+                        <TextBlock Text="B" Style="{StaticResource NoteLabel}"/>
+                    </Button>
 
-                    <Button Grid.Column="14" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Content="C" Tag="15" Click="KeyClick"/>
+                    <Button Grid.Column="14" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="15" Click="KeyClick">
+                        <TextBlock Text="C" Style="{StaticResource NoteLabel}"/>
+                    </Button>
                 </Grid>
 
-                <Grid Grid.Row="0">
+                <Grid x:Name="BlackKeys" Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10*" />
                         <ColumnDefinition Width="20*" />
@@ -565,17 +599,37 @@
                         <ColumnDefinition Width="32*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1" Style="{StaticResource BlackKeyStyle}" Content="C#" Tag="-8" Click="KeyClick"/>
-                    <Button Grid.Column="3" Style="{StaticResource BlackKeyStyle}" Content="D#" Tag="-6" Click="KeyClick"/>
-                    <Button Grid.Column="5" Style="{StaticResource BlackKeyStyle}" Content="F#" Tag="-3" Click="KeyClick"/>
-                    <Button Grid.Column="7" Style="{StaticResource BlackKeyStyle}" Content="G#" Tag="-1" Click="KeyClick"/>
-                    <Button Grid.Column="9" Style="{StaticResource BlackKeyStyle}" Content="A#" Tag="1" Click="KeyClick"/>
+                    <Button Grid.Column="1" Style="{StaticResource BlackKeyStyle}" Tag="-8" Click="KeyClick">
+                        <TextBlock Text="C#" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="3" Style="{StaticResource BlackKeyStyle}" Tag="-6" Click="KeyClick">
+                        <TextBlock Text="D#" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="5" Style="{StaticResource BlackKeyStyle}" Tag="-3" Click="KeyClick">
+                        <TextBlock Text="F#" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="7" Style="{StaticResource BlackKeyStyle}" Tag="-1" Click="KeyClick">
+                        <TextBlock Text="G#" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="9" Style="{StaticResource BlackKeyStyle}" Tag="1" Click="KeyClick">
+                        <TextBlock Text="A#" Style="{StaticResource NoteLabel}"/>
+                    </Button>
 
-                    <Button Grid.Column="11" Style="{StaticResource BlackKeyStyle}" Content="C#" Tag="4" Click="KeyClick"/>
-                    <Button Grid.Column="13" Style="{StaticResource BlackKeyStyle}" Content="D#" Tag="6" Click="KeyClick"/>
-                    <Button Grid.Column="15" Style="{StaticResource BlackKeyStyle}" Content="F#" Tag="9" Click="KeyClick"/>
-                    <Button Grid.Column="17" Style="{StaticResource BlackKeyStyle}" Content="G#" Tag="11" Click="KeyClick"/>
-                    <Button Grid.Column="19" Style="{StaticResource BlackKeyStyle}" Content="A#" Tag="13" Click="KeyClick"/>
+                    <Button Grid.Column="11" Style="{StaticResource BlackKeyStyle}" Tag="4" Click="KeyClick">
+                        <TextBlock Text="C#" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="13" Style="{StaticResource BlackKeyStyle}" Tag="6" Click="KeyClick">
+                        <TextBlock Text="D#" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="15" Style="{StaticResource BlackKeyStyle}" Tag="9" Click="KeyClick">
+                        <TextBlock Text="F#" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="17" Style="{StaticResource BlackKeyStyle}" Tag="11" Click="KeyClick">
+                        <TextBlock Text="G#" Style="{StaticResource NoteLabel}"/>
+                    </Button>
+                    <Button Grid.Column="19" Style="{StaticResource BlackKeyStyle}" Tag="13" Click="KeyClick">
+                        <TextBlock Text="A#" Style="{StaticResource NoteLabel}"/>
+                    </Button>
                 </Grid>
             </Grid>
 
@@ -745,7 +799,7 @@
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
-                            
+
                             <!--Сделать кнопку "Помощь"-->
 
                         </Grid>
@@ -756,13 +810,13 @@
                             Height="50"
                             Style="{StaticResource SideBarMenuButtonStyle}"
                             VerticalAlignment="Bottom"
-                            Click="HelpButton_Click">   
+                            Click="HelpButton_Click">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border Background="{TemplateBinding Background}"
                                         BorderBrush="{TemplateBinding BorderBrush}"
                                         BorderThickness="{TemplateBinding BorderThickness}"
-                                        CornerRadius="15">  
+                                        CornerRadius="15">
                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Border>
                                 </ControlTemplate>
@@ -773,7 +827,6 @@
                 </Border>
             </StackPanel>
         </Grid>
-
         <StackPanel x:Name="InstructionsPanel"
                     Background="#eae1d2"
                     HorizontalAlignment="Stretch"
@@ -783,39 +836,38 @@
                     Orientation="Vertical"
                     Panel.ZIndex="3">
             <TextBlock Style="{StaticResource SpecialHelpText}"
-                       Text="ИНСТРУКЦИЯ К ПРИЛОЖЕНИЮ DIGITAL PIANO" />
+                               Text="ИНСТРУКЦИЯ К ПРИЛОЖЕНИЮ DIGITAL PIANO" />
             <TextBlock Style="{StaticResource HelpText}"
-                       Text="Приложение симулирует пианино, клавитура которого располагается в главном меню где помимо клавиш так же есть: Громкость, Сустейн, Надписи и Метроном" />
+                               Text="Приложение симулирует пианино, клавитура которого располагается в главном меню где помимо клавиш так же есть: Громкость, Сустейн, Надписи и Метроном" />
             <TextBlock Style="{StaticResource SpecialHelpText}"
-                       Text="Главное меню:" />
+                               Text="Главное меню:" />
             <TextBlock Style="{StaticResource HelpText}"
-                       Text="Громкость: Регулирует уровень громкости пианино в процентах от 0% до 100%" />
+                               Text="Громкость: Регулирует уровень громкости пианино в процентах от 0% до 100%" />
             <TextBlock Style="{StaticResource HelpText}"
-                       Text="Сустейн: Регулирует уровень сустейна, Положение 0 - Выкл, Положение 1 - Малый Уровень, Положение 2 - Максимальный Уровень" />
+                               Text="Сустейн: Регулирует уровень сустейна, Положение 0 - Выкл, Положение 1 - Малый Уровень, Положение 2 - Максимальный Уровень" />
             <TextBlock Style="{StaticResource HelpText}"
-                       Text="Надписи: Включает или отключает отображение названий клавиш на клавиатуре" />
+                               Text="Надписи: Включает или отключает отображение названий клавиш на клавиатуре" />
             <TextBlock Style="{StaticResource HelpText}"
-                       Text="Метроном: Включает или отключает метроном (Настройки Метронома находятся в Расширенных настройках)" />
+                               Text="Метроном: Включает или отключает метроном (Настройки Метронома находятся в Расширенных настройках)" />
             <TextBlock Style="{StaticResource SpecialHelpText}"
-                       Text="Расширенные настройки:" />
+                               Text="Расширенные настройки:" />
             <TextBlock Style="{StaticResource HelpText}"
-                       Text="Частота: Позволяет настроить частоту пианино, базовое значение 440.0 Гц" />
+                               Text="Частота: Позволяет настроить частоту пианино, базовое значение 440.0 Гц" />
             <TextBlock Style="{StaticResource HelpText}"
-                       Text="Реверб: Позволяет настроить уровень реверберации, от 0(Выкл) до 3(Максимальный), базовое значение 0" />
+                               Text="Реверб: Позволяет настроить уровень реверберации, от 0(Выкл) до 3(Максимальный), базовое значение 0" />
             <TextBlock Style="{StaticResource HelpText}"
-                       Text="Хорус: Позволяет настроить уровень хоруса, от 0(Выкл) до 3(Максимальный), базовое значение 0" />
+                               Text="Хорус: Позволяет настроить уровень хоруса, от 0(Выкл) до 3(Максимальный), базовое значение 0" />
             <TextBlock Style="{StaticResource HelpText}"
-                       Text="Темп: Позволяет настроить скорость Метронома, от 30 до 180, базовое значение 60" />
+                               Text="Темп: Позволяет настроить скорость Метронома, от 30 до 180, базовое значение 60" />
             <TextBlock Style="{StaticResource HelpText}"
-                       Text="Размер: Позволяет настроить размер Метронома, от 3/4 до 7/8, базовое значение 4/4" />
+                               Text="Размер: Позволяет настроить размер Метронома, от 3/4 до 7/8, базовое значение 4/4" />
             <TextBlock Style="{StaticResource SpecialHelpText}"
-                       Text="Управление:" />
+                               Text="Управление:" />
             <TextBlock Style="{StaticResource HelpText}"
-                       Text="Нажатие курсором на клавишу воспроизводит соответствующую ноту" />
+                               Text="Нажатие курсором на клавишу воспроизводит соответствующую ноту" />
             <TextBlock Style="{StaticResource HelpText}"
-                       Text="Нажатие на Esc закрывает открытые вторичные окна и служит выходом из приложения" />
+                               Text="Нажатие на Esc закрывает открытые вторичные окна и служит выходом из приложения" />
         </StackPanel>
-
     </Grid>
 
 </Window>

@@ -22,7 +22,7 @@ namespace Digital_Piano {
             InitializeComponent();
         }
 
-        private bool isNotesNamesVisible = true;
+        private bool isNotesNamesVisible = false;
         private bool isMenuVisible = false;
         private bool isExitMenuVisible = false;
         private bool isInstructionsVisible = false;
@@ -127,6 +127,44 @@ namespace Digital_Piano {
                 int semitoneOffset = int.Parse(clickedButton.Tag.ToString());
                 if (piano != null) {
                     piano.PlayTone(semitoneOffset, 1);
+                }
+            }
+        }
+
+        private void LabelShowClick(object sender, RoutedEventArgs e) {
+            if (isNotesNamesVisible) {
+                HideText();
+            }
+            else {
+                ShowText();
+            }
+            isNotesNamesVisible = !isNotesNamesVisible;
+        }
+        private void HideText() {
+            foreach (var button in WhiteKeys.Children.OfType<Button>()) {
+                var textBlock = button.Content as TextBlock;
+                if (textBlock != null) {
+                    textBlock.Visibility = Visibility.Collapsed;
+                }
+            }
+            foreach (var button in BlackKeys.Children.OfType<Button>()) {
+                var textBlock = button.Content as TextBlock;
+                if (textBlock != null) {
+                    textBlock.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+        private void ShowText() {
+            foreach (var button in WhiteKeys.Children.OfType<Button>()) {
+                var textBlock = button.Content as TextBlock;
+                if (textBlock != null) {
+                    textBlock.Visibility = Visibility.Visible;
+                }
+            }
+            foreach (var button in BlackKeys.Children.OfType<Button>()) {
+                var textBlock = button.Content as TextBlock;
+                if (textBlock != null) {
+                    textBlock.Visibility = Visibility.Visible;
                 }
             }
         }
