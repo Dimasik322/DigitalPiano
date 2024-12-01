@@ -15,8 +15,6 @@ namespace Digital_Piano {
     public partial class MainWindow : Window {
 
         private Piano piano;
-        //Сделать экземляр метронома
-        //Сделать обработку, проверку и сохранение изменений в полях
 
         public MainWindow() {
             piano = new Piano();
@@ -28,13 +26,7 @@ namespace Digital_Piano {
         private bool isMenuVisible = false;
         private bool isExitMenuVisible = false;
         private bool isInstructionsVisible = false;
-
-        private void ToggleMenuButton_Click(object sender, RoutedEventArgs e) {
-            Overlay.Visibility = Visibility.Visible;
-            Storyboard showMenu = (Storyboard)FindResource("ShowMenuAnimation");
-            showMenu.Begin();
-            isMenuVisible = true;
-        }
+        private static readonly int[] time_sig = new int[] { 3, 4, 5, 6, 7 };
 
         protected override void OnKeyDown(KeyEventArgs e) {
             base.OnKeyDown(e);
@@ -54,8 +46,19 @@ namespace Digital_Piano {
                 HideExitMenu();
                 return;
             }
+            if (e.Key == Key.Enter) {
+                if (isExitMenuVisible) {
+                    Application.Current.Shutdown();
+                }
+            }
         }
 
+        private void ToggleMenuButton_Click(object sender, RoutedEventArgs e) {
+            Overlay.Visibility = Visibility.Visible;
+            Storyboard showMenu = (Storyboard)FindResource("ShowMenuAnimation");
+            showMenu.Begin();
+            isMenuVisible = true;
+        }
         private void HideSideBarMenu() {
             Storyboard hideMenu = (Storyboard)FindResource("HideMenuAnimation");
             hideMenu.Completed += (s, ev) => {
@@ -97,7 +100,6 @@ namespace Digital_Piano {
             hideMenu.Begin();
             isMenuVisible = false;
         }
-
         private void HelpButton_Click(object sender, RoutedEventArgs e) {
             if (isInstructionsVisible) {
                 HideHelpPanel();
@@ -119,8 +121,6 @@ namespace Digital_Piano {
             isInstructionsVisible = !isInstructionsVisible;
         }
 
-
-
         private void KeyClick(object sender, RoutedEventArgs e) {
             Button clickedButton = sender as Button;
             if (clickedButton != null) {
@@ -137,73 +137,96 @@ namespace Digital_Piano {
                 piano.volume = newVolume;
             }
         }
-
         private void SustainSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (SustainSlider != null) {
-                uint newSustainLevel = (uint)SustainSlider.Value;
+                int newSustainLevel = (int)SustainSlider.Value;
                 piano.sustain = newSustainLevel;
             }
         }
 
         private void DecreaseFreqValue(object sender, RoutedEventArgs e) {
-            double value = double.Parse(FreqInputField.Text);
-            value -= 0.1;
-            FreqInputField.Text = value.ToString();
+            if (double.TryParse(FreqInputField.Text, out double current_freq)) {
+                current_freq = Math.Max(420.0, current_freq - 0.1);
+                FreqInputField.Text = current_freq.ToString("F1");
+            }
         }
-
         private void IncreaseFreqValue(object sender, RoutedEventArgs e) {
-            double value = int.Parse(FreqInputField.Text);
-            value += 0.1;
-            FreqInputField.Text = value.ToString();
+            if (double.TryParse(FreqInputField.Text, out double current_freq)) {
+                current_freq = Math.Min(480.0, current_freq + 0.1);
+                FreqInputField.Text = current_freq.ToString("F1");
+            }
         }
 
         private void DecreaseReverbValue(object sender, RoutedEventArgs e) {
-            uint value = uint.Parse(ReverbInputField.Text);
-            value -= 1;
-            ReverbInputField.Text = value.ToString();
+            if (int.TryParse(ReverbInputField.Text, out int current_value)) {
+                if (current_value > 0) {
+                    ReverbInputField.Text = (current_value - 1).ToString();
+                }
+            }
         }
-
         private void IncreaseReverbValue(object sender, RoutedEventArgs e) {
-            uint value = uint.Parse(ReverbInputField.Text);
-            value += 1;
-            ReverbInputField.Text = value.ToString();
+            if (int.TryParse(ReverbInputField.Text, out int current_value)) {
+                if (current_value < 9) {
+                    ReverbInputField.Text = (current_value + 1).ToString();
+                }
+            }
         }
 
         private void DecreaseChorusValue(object sender, RoutedEventArgs e) {
-            uint value = uint.Parse(ChorusInputField.Text);
-            value -= 1;
-            ChorusInputField.Text = value.ToString();
+            if (int.TryParse(ChorusInputField.Text, out int current_value)) {
+                if (current_value > 0) {
+                    ChorusInputField.Text = (current_value - 1).ToString();
+                }
+            }
         }
-
         private void IncreaseChorusValue(object sender, RoutedEventArgs e) {
-            uint value = uint.Parse(ChorusInputField.Text);
-            value += 1;
-            ChorusInputField.Text = value.ToString();
+            if (int.TryParse(ChorusInputField.Text, out int current_value)) {
+                if (current_value < 3) {
+                    ChorusInputField.Text = (current_value + 1).ToString();
+                }
+            }
         }
 
         private void DecreaseMetroTempoValue(object sender, RoutedEventArgs e) {
-            uint value = uint.Parse(MetroTempoInputField.Text);
-            value -= 1;
-            ChorusInputField.Text = value.ToString();
+            if (int.TryParse(MetroTempoInputField.Text, out int current_value)) {
+                if (current_value > 30) {
+                    MetroTempoInputField.Text = (current_value - 1).ToString();
+                }
+            }
         }
-
         private void IncreaseMetroTempoValue(object sender, RoutedEventArgs e) {
-            uint value = uint.Parse(MetroTempoInputField.Text);
-            value += 1;
-            ChorusInputField.Text = value.ToString();
+            if (int.TryParse(MetroTempoInputField.Text, out int current_value)) {
+                if (current_value < 240) {
+                    MetroTempoInputField.Text = (current_value + 1).ToString();
+                }
+            }
         }
 
         private void DecreaseMetroSignValue(object sender, RoutedEventArgs e) {
-            uint value = uint.Parse(MetroSignInputField.Text);
-            value -= 1;
-            MetroSignInputField.Text = value.ToString();
+            string currentValue = MetroSignInputField.Text;
+            string[] parts = currentValue.Split('/');
+            if (parts.Length == 2) {
+                if (int.TryParse(parts[0], out int firstNumber)) {
+                    int index = firstNumber - 3;
+                    if (index > 0) {
+                        firstNumber = time_sig[index - 1];
+                        MetroSignInputField.Text = $"{firstNumber}/{parts[1]}";
+                    }
+                }
+            }
         }
-
         private void IncreaseMetroSignValue(object sender, RoutedEventArgs e) {
-            uint value = uint.Parse(MetroSignInputField.Text);
-            value += 1;
-            MetroSignInputField.Text = value.ToString();
+            string currentValue = MetroSignInputField.Text;
+            string[] parts = currentValue.Split('/');
+            if (parts.Length == 2) {
+                if (int.TryParse(parts[0], out int firstNumber)) {
+                    int index = firstNumber - 3;
+                    if (index < 4) {
+                        firstNumber = time_sig[index + 1];
+                        MetroSignInputField.Text = $"{firstNumber}/{parts[1]}";
+                    }
+                }
+            }
         }
-
     }
 }

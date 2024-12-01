@@ -678,7 +678,7 @@
                                         <Button Style="{StaticResource ChangeButtonStyle}" Click="DecreaseFreqValue">
                                             <TextBlock Text="&#9665;" FontSize="20"/>
                                         </Button>
-                                        <TextBox x:Name="FreqInputField" Style="{StaticResource TextBoxStyle}" Text="440.0"/>
+                                        <TextBox x:Name="FreqInputField" Style="{StaticResource TextBoxStyle}" Text="440,0" MaxLength="5"/>
                                         <Button Style="{StaticResource ChangeButtonStyle}" Click="IncreaseFreqValue">
                                             <TextBlock Text="&#9655;" FontSize="20"/>
                                         </Button>
@@ -693,7 +693,7 @@
                                         <Button Style="{StaticResource ChangeButtonStyle}" Click="DecreaseReverbValue">
                                             <TextBlock Text="&#9665;" FontSize="20"/>
                                         </Button>
-                                        <TextBox x:Name="ReverbInputField" Style="{StaticResource TextBoxStyle}" Text="1"/>
+                                        <TextBox x:Name="ReverbInputField" Style="{StaticResource TextBoxStyle}" Text="1" MaxLength="1"/>
                                         <Button Style="{StaticResource ChangeButtonStyle}" Click="IncreaseReverbValue">
                                             <TextBlock Text="&#9655;" FontSize="20"/>
                                         </Button>
@@ -708,7 +708,7 @@
                                         <Button Style="{StaticResource ChangeButtonStyle}" Click="DecreaseChorusValue">
                                             <TextBlock Text="&#9665;" FontSize="20"/>
                                         </Button>
-                                        <TextBox x:Name="ChorusInputField" Style="{StaticResource TextBoxStyle}" Text="0"/>
+                                        <TextBox x:Name="ChorusInputField" Style="{StaticResource TextBoxStyle}" Text="0" MaxLength="1"/>
                                         <Button Style="{StaticResource ChangeButtonStyle}" Click="IncreaseChorusValue">
                                             <TextBlock Text="&#9655;" FontSize="20"/>
                                         </Button>
@@ -723,7 +723,7 @@
                                         <Button Style="{StaticResource ChangeButtonStyle}" Click="DecreaseMetroTempoValue">
                                             <TextBlock Text="&#9665;" FontSize="20"/>
                                         </Button>
-                                        <TextBox x:Name="MetroTempoInputField" Style="{StaticResource TextBoxStyle}" Text="0"/>
+                                        <TextBox x:Name="MetroTempoInputField" Style="{StaticResource TextBoxStyle}" Text="60" MaxLength="3"/>
                                         <Button Style="{StaticResource ChangeButtonStyle}" Click="IncreaseMetroTempoValue">
                                             <TextBlock Text="&#9655;" FontSize="20"/>
                                         </Button>
@@ -738,7 +738,7 @@
                                         <Button Style="{StaticResource ChangeButtonStyle}" Click="DecreaseMetroSignValue">
                                             <TextBlock Text="&#9665;" FontSize="20"/>
                                         </Button>
-                                        <TextBox x:Name="MetroSignInputField" Style="{StaticResource TextBoxStyle}" Text="0"/>
+                                        <TextBox x:Name="MetroSignInputField" Style="{StaticResource TextBoxStyle}" Text="4/4" MaxLength="3"/>
                                         <Button Style="{StaticResource ChangeButtonStyle}" Click="IncreaseMetroSignValue">
                                             <TextBlock Text="&#9655;" FontSize="20"/>
                                         </Button>
