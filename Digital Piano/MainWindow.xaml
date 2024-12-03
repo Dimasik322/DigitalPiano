@@ -88,7 +88,7 @@
             <Setter Property="Padding" Value="0,5"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="BorderBrush" Value="#6b7050"/>
-            <Setter Property="Height" Value="120"/>
+            <Setter Property="Height" Value="300"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -122,7 +122,7 @@
             <Setter Property="Padding" Value="0,0"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="BorderBrush" Value="#6b7050"/>
-            <Setter Property="Height" Value="70"/>
+            <Setter Property="Height" Value="150"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -370,6 +370,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <StackPanel x:Name="VolumeSliderPanel" Grid.Column="0" VerticalAlignment="Top">
@@ -487,6 +488,56 @@
                         <StackPanel>
                             <TextBlock Text="МЕТРОНОМ" Style="{StaticResource LabelText}"/>
                             <ToggleButton Style="{StaticResource SwitchStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel x:Name="PitchSliderPanel" Grid.Column="4" VerticalAlignment="Top">
+                    <Border Style="{StaticResource ControlsContainerStyle}">
+                        <StackPanel>
+                            <TextBlock Text="ОКТАВА" Style="{StaticResource LabelText}"/>
+                            <Slider x:Name="PitchSlider"
+                                Minimum="-2"
+                                Maximum="2"
+                                Value="0"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                AutoToolTipPlacement="TopLeft"
+                                AutoToolTipPrecision="0"
+                                HorizontalAlignment="Center"
+                                Width="150"
+                                Height="30"
+                                ValueChanged="PitchSlider_ValueChanged">
+                                <Slider.Resources>
+                                    <Style TargetType="Thumb" BasedOn="{StaticResource SliderThumbStyle}" />
+                                    <Style TargetType="Border" BasedOn="{StaticResource ContainerStyle}" />
+                                </Slider.Resources>
+                                <Slider.Template>
+                                    <ControlTemplate TargetType="Slider">
+                                        <Grid>
+                                            <Track Name="PART_Track">
+                                                <Track.DecreaseRepeatButton>
+                                                    <RepeatButton Command="Slider.DecreaseLarge" 
+                                                      Style="{x:Null}" 
+                                                      IsEnabled="False" 
+                                                      Height="4" 
+                                                      Background="#eae1d2"/>
+                                                </Track.DecreaseRepeatButton>
+                                                <Track.IncreaseRepeatButton>
+                                                    <RepeatButton Command="Slider.IncreaseLarge" 
+                                                      Style="{x:Null}" 
+                                                      IsEnabled="False" 
+                                                      Height="4" 
+                                                      Background="#eae1d2"/>    
+                                                </Track.IncreaseRepeatButton>
+                                                <Track.Thumb>
+                                                    <Thumb Style="{StaticResource SliderThumbStyle}" VerticalAlignment="Center" />
+                                                </Track.Thumb>
+                                            </Track>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Slider.Template>
+                            </Slider>
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -799,9 +850,6 @@
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
-
-                            <!--Сделать кнопку "Помощь"-->
-
                         </Grid>
 
                         <Button x:Name="HelpButton"

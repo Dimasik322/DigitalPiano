@@ -18,16 +18,20 @@ namespace Digital_Piano {
         public int pitch;
         public Metro metro;
 
-        int lowest_semitone = -9;
-        int highest_semitone = 15;
+        int lowest_semitone = -33;
+        int highest_semitone = 39;
+
+        public Dictionary<int, float[]> toneCache = new Dictionary<int, float[]>();
 
         public class Metro {
             public int volume;
+            public int tempo;
             public int current_size;
             public int[] time_sig;
 
             public Metro() {
                 this.volume = 50;
+                this.tempo = 60;
                 this.current_size = 4;
                 this.time_sig = new int[] { 3, 4, 5, 6, 7 };
             }
@@ -40,34 +44,47 @@ namespace Digital_Piano {
             this.chorus = 0;
             this.volume = 50;
             this.pitch = 0;
+
+            InitializeTones();
+
             this.metro = new Metro();
         }
 
-        private double GetNoteFrequency(int semitoneOffset) {
-            return basefreq * Math.Pow(2, semitoneOffset / 12.0);
-        }
-
-        public void PlayTone(int semitoneOffset, double durationSeconds) {
+        private void GenerateTone(int semitoneOffset, double durationSeconds) {
             int samplesCount = (int)(SampleRate * durationSeconds);
             var buffer = new float[samplesCount];
             for (int i = 0; i < samplesCount; i++) {
                 buffer[i] = (float)Math.Sin(2 * Math.PI * GetNoteFrequency(semitoneOffset) * i / SampleRate);
             }
             buffer = AddOvertones(buffer, semitoneOffset);
-            if (reverb > 0) {
-                buffer = ApplyReverb(buffer, reverb);
-            }
-            if (chorus > 0) {
-                buffer = ApplyChorus(buffer, chorus);
-            }
-            using (var waveOut = new WaveOutEvent()) {
-                var waveProvider = new BufferedWaveProvider(WaveFormat.CreateIeeeFloatWaveFormat(SampleRate, 1));
-                waveProvider.AddSamples(GetByteArrayFromFloatArray(buffer), 0, buffer.Length * sizeof(float));
-                waveOut.Init(waveProvider);
-                waveOut.Play();
-                Thread.Sleep((int)(durationSeconds * 1000));
+            toneCache[semitoneOffset] = buffer;
+        }
+
+        public void InitializeTones() {
+            for (int i = lowest_semitone; i <= highest_semitone; i++) {
+                GenerateTone(i, 1.0);
             }
         }
+
+        private double GetNoteFrequency(int semitoneOffset) {
+            return basefreq * Math.Pow(2, semitoneOffset / 12.0);
+        }
+
+        public async Task PlayCachedTone(int semitoneOffset) {
+            if (toneCache.TryGetValue((semitoneOffset + pitch * 12), out var buffer)) {
+                using (var waveOut = new WaveOutEvent()) {
+                    var waveProvider = new BufferedWaveProvider(WaveFormat.CreateIeeeFloatWaveFormat(SampleRate, 1));
+                    waveProvider.AddSamples(GetByteArrayFromFloatArray(buffer), 0, buffer.Length * sizeof(float));
+                    waveOut.Init(waveProvider);
+                    waveOut.Play();
+                    await Task.Delay((int)(1.0 * 1000));
+                }
+            }
+            else {
+                Console.WriteLine("Тон не найден в кэше.");
+            }
+        }
+
         private byte[] GetByteArrayFromFloatArray(float[] buffer) {
             var byteArray = new byte[buffer.Length * sizeof(float)];
             Buffer.BlockCopy(buffer, 0, byteArray, 0, byteArray.Length);

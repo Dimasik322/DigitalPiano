@@ -16,8 +16,11 @@ namespace Digital_Piano {
 
         private Piano piano;
 
+        private List<Task> tasks;
+
         public MainWindow() {
             piano = new Piano();
+            tasks = new List<Task>();
 
             InitializeComponent();
         }
@@ -92,7 +95,32 @@ namespace Digital_Piano {
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e) {
-            MessageBox.Show("Данные сохранены!");
+
+            if (double.TryParse(FreqInputField.Text, out double currentFreq)) {
+                piano.basefreq = currentFreq;
+            }
+            if (int.TryParse(ReverbInputField.Text, out int currentReverb)) {
+                piano.reverb = currentReverb;
+            }
+            if (int.TryParse(ChorusInputField.Text, out int currentChorus)) {
+                piano.chorus = currentChorus;
+            }
+            if (int.TryParse(MetroTempoInputField.Text, out int currentTempo)) {
+                piano.metro.tempo = currentTempo;
+            }
+            string currentSig = MetroSignInputField.Text;
+            string[] parts = currentSig.Split('/');
+            if (parts.Length == 2) {
+                if (int.TryParse(parts[0], out int firstNumber)) {
+                    int index = firstNumber - 3;
+                    firstNumber = time_sig[index - 1];
+                    piano.metro.current_size = firstNumber;
+                }
+            }
+
+            piano.InitializeTones();
+            //piano.metro.InitializeMetro();
+
             Storyboard hideMenu = (Storyboard)FindResource("HideMenuAnimation");
             hideMenu.Completed += (s, ev) => {
                 Overlay.Visibility = Visibility.Collapsed;
@@ -122,11 +150,13 @@ namespace Digital_Piano {
         }
 
         private void KeyClick(object sender, RoutedEventArgs e) {
+            Console.WriteLine(tasks.Count());
             Button clickedButton = sender as Button;
             if (clickedButton != null) {
                 int semitoneOffset = int.Parse(clickedButton.Tag.ToString());
                 if (piano != null) {
-                    piano.PlayTone(semitoneOffset, 1);
+                    Task task = piano.PlayCachedTone(semitoneOffset);
+                    tasks.Add(task);
                 }
             }
         }
@@ -179,6 +209,12 @@ namespace Digital_Piano {
             if (SustainSlider != null) {
                 int newSustainLevel = (int)SustainSlider.Value;
                 piano.sustain = newSustainLevel;
+            }
+        }
+        private void PitchSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            if (PitchSlider != null) {
+                int newPitch = (int)PitchSlider.Value;
+                piano.pitch = newPitch;
             }
         }
 
