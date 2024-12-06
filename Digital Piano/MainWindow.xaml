@@ -574,51 +574,51 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-9" Click="KeyClick">
+                    <Button Grid.Column="0" x:Name="C1" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-9" Click="KeyClick">
                         <TextBlock Text="C" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-7" Click="KeyClick">
+                    <Button Grid.Column="1" x:Name="D1" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-7" Click="KeyClick">
                         <TextBlock Text="D" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="2" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-5" Click="KeyClick">
+                    <Button Grid.Column="2" x:Name="E1" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-5" Click="KeyClick">
                         <TextBlock Text="E" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="3" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-4" Click="KeyClick">
+                    <Button Grid.Column="3" x:Name="F1" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-4" Click="KeyClick">
                         <TextBlock Text="F" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="4" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-2" Click="KeyClick">
+                    <Button Grid.Column="4" x:Name="G1" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="-2" Click="KeyClick">
                         <TextBlock Text="G" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="5" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="0" Click="KeyClick">
+                    <Button Grid.Column="5" x:Name="A1" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="0" Click="KeyClick">
                         <TextBlock Text="A" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="6" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="2" Click="KeyClick">
+                    <Button Grid.Column="6" x:Name="B1" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="2" Click="KeyClick">
                         <TextBlock Text="B" Style="{StaticResource NoteLabel}"/>
                     </Button>
 
-                    <Button Grid.Column="7" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="3" Click="KeyClick">
+                    <Button Grid.Column="7" x:Name="C2" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="3" Click="KeyClick">
                         <TextBlock Text="C" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="8" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="5" Click="KeyClick">
+                    <Button Grid.Column="8" x:Name="D2" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="5" Click="KeyClick">
                         <TextBlock Text="D" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="9" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="7" Click="KeyClick">
+                    <Button Grid.Column="9" x:Name="E2" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="7" Click="KeyClick">
                         <TextBlock Text="E" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="10" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="8" Click="KeyClick">
+                    <Button Grid.Column="10" x:Name="F2" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="8" Click="KeyClick">
                         <TextBlock Text="F" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="11" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="10" Click="KeyClick">
+                    <Button Grid.Column="11" x:Name="G2" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="10" Click="KeyClick">
                         <TextBlock Text="G" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="12" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="12" Click="KeyClick">
+                    <Button Grid.Column="12" x:Name="A2" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="12" Click="KeyClick">
                         <TextBlock Text="A" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="13" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="14" Click="KeyClick">
+                    <Button Grid.Column="13" x:Name="B2" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="14" Click="KeyClick">
                         <TextBlock Text="B" Style="{StaticResource NoteLabel}"/>
                     </Button>
 
-                    <Button Grid.Column="14" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="15" Click="KeyClick">
+                    <Button Grid.Column="14" x:Name="C3" Grid.Row="0" Style="{StaticResource WhiteKeyStyle}" Tag="15" Click="KeyClick">
                         <TextBlock Text="C" Style="{StaticResource NoteLabel}"/>
                     </Button>
                 </Grid>
@@ -650,35 +650,35 @@
                         <ColumnDefinition Width="32*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1" Style="{StaticResource BlackKeyStyle}" Tag="-8" Click="KeyClick">
+                    <Button Grid.Column="1" x:Name="CS1" Style="{StaticResource BlackKeyStyle}" Tag="-8" Click="KeyClick">
                         <TextBlock Text="C#" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="3" Style="{StaticResource BlackKeyStyle}" Tag="-6" Click="KeyClick">
+                    <Button Grid.Column="3" x:Name="DS1" Style="{StaticResource BlackKeyStyle}" Tag="-6" Click="KeyClick">
                         <TextBlock Text="D#" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="5" Style="{StaticResource BlackKeyStyle}" Tag="-3" Click="KeyClick">
+                    <Button Grid.Column="5" x:Name="FS1" Style="{StaticResource BlackKeyStyle}" Tag="-3" Click="KeyClick">
                         <TextBlock Text="F#" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="7" Style="{StaticResource BlackKeyStyle}" Tag="-1" Click="KeyClick">
+                    <Button Grid.Column="7" x:Name="GS1" Style="{StaticResource BlackKeyStyle}" Tag="-1" Click="KeyClick">
                         <TextBlock Text="G#" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="9" Style="{StaticResource BlackKeyStyle}" Tag="1" Click="KeyClick">
+                    <Button Grid.Column="9" x:Name="AS1" Style="{StaticResource BlackKeyStyle}" Tag="1" Click="KeyClick">
                         <TextBlock Text="A#" Style="{StaticResource NoteLabel}"/>
                     </Button>
 
-                    <Button Grid.Column="11" Style="{StaticResource BlackKeyStyle}" Tag="4" Click="KeyClick">
+                    <Button Grid.Column="11" x:Name="CS2" Style="{StaticResource BlackKeyStyle}" Tag="4" Click="KeyClick">
                         <TextBlock Text="C#" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="13" Style="{StaticResource BlackKeyStyle}" Tag="6" Click="KeyClick">
+                    <Button Grid.Column="13" x:Name="DS2" Style="{StaticResource BlackKeyStyle}" Tag="6" Click="KeyClick">
                         <TextBlock Text="D#" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="15" Style="{StaticResource BlackKeyStyle}" Tag="9" Click="KeyClick">
+                    <Button Grid.Column="15" x:Name="FS2" Style="{StaticResource BlackKeyStyle}" Tag="9" Click="KeyClick">
                         <TextBlock Text="F#" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="17" Style="{StaticResource BlackKeyStyle}" Tag="11" Click="KeyClick">
+                    <Button Grid.Column="17" x:Name="GS2" Style="{StaticResource BlackKeyStyle}" Tag="11" Click="KeyClick">
                         <TextBlock Text="G#" Style="{StaticResource NoteLabel}"/>
                     </Button>
-                    <Button Grid.Column="19" Style="{StaticResource BlackKeyStyle}" Tag="13" Click="KeyClick">
+                    <Button Grid.Column="19" x:Name="AS2" Style="{StaticResource BlackKeyStyle}" Tag="13" Click="KeyClick">
                         <TextBlock Text="A#" Style="{StaticResource NoteLabel}"/>
                     </Button>
                 </Grid>

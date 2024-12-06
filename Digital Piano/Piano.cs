@@ -9,7 +9,7 @@ using NAudio.Wave;
 
 namespace Digital_Piano {
     public class Piano {
-        protected const int SampleRate = 44100;
+        private const int SampleRate = 44100;
         public double basefreq;
         public int sustain;
         public int reverb;
@@ -18,8 +18,8 @@ namespace Digital_Piano {
         public int pitch;
         public Metro metro;
 
-        int lowest_semitone = -33;
-        int highest_semitone = 39;
+        private int lowest_semitone = -33;
+        private int highest_semitone = 39;
 
         public Dictionary<int, float[]> toneCache = new Dictionary<int, float[]>();
 
@@ -57,6 +57,8 @@ namespace Digital_Piano {
                 buffer[i] = (float)Math.Sin(2 * Math.PI * GetNoteFrequency(semitoneOffset) * i / SampleRate);
             }
             buffer = AddOvertones(buffer, semitoneOffset);
+            buffer = AddReverb(buffer);
+            buffer = AddChorus(buffer);
             toneCache[semitoneOffset] = buffer;
         }
 
@@ -100,25 +102,25 @@ namespace Digital_Piano {
             }
             return buffer;
         }
-        private float[] ApplyReverb(float[] buffer, int reverbStrength) {
+        private float[] AddReverb(float[] buffer) {
             int delaySamples = (int)(SampleRate * 0.03);
             float decay = 0.5f;
             for (int i = delaySamples; i < buffer.Length; i++) {
-                buffer[i] += buffer[i - delaySamples] * decay * (reverbStrength / 100.0f);
+                buffer[i] += buffer[i - delaySamples] * decay * (reverb / 9.0f);
             }
             return buffer;
         }
-        private float[] ApplyChorus(float[] buffer, int chorusStrength) {
+        private float[] AddChorus(float[] buffer) {
             int modDepth = (int)(SampleRate * 0.005);
             double modRate = 1.0;
             for (int i = 0; i < buffer.Length; i++) {
                 int modOffset = (int)(modDepth * Math.Sin(2 * Math.PI * modRate * i / SampleRate));
                 int index = Math.Clamp(i + modOffset, 0, buffer.Length - 1);
-                buffer[i] += buffer[index] * (chorusStrength / 100.0f);
+                buffer[i] += buffer[index] * (chorus / 3.0f);
             }
             return buffer;
         }
-
     }
+
 
 }

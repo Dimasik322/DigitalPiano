@@ -1,0 +1,108 @@
+{
+  "Mappings": [
+    {
+      "Key": "Z",
+      "ButtonName": "C1"
+    },
+    {
+      "Key": "X",
+      "ButtonName": "D1"
+    },
+    {
+      "Key": "C",
+      "ButtonName": "E1"
+    },
+    {
+      "Key": "V",
+      "ButtonName": "F1"
+    },
+    {
+      "Key": "B",
+      "ButtonName": "G1"
+    },
+    {
+      "Key": "N",
+      "ButtonName": "A1"
+    },
+    {
+      "Key": "M",
+      "ButtonName": "B1"
+    },
+
+    {
+      "Key": "R",
+      "ButtonName": "C2"
+    },
+    {
+      "Key": "T",
+      "ButtonName": "D2"
+    },
+    {
+      "Key": "Y",
+      "ButtonName": "E2"
+    },
+    {
+      "Key": "U",
+      "ButtonName": "F2"
+    },
+    {
+      "Key": "I",
+      "ButtonName": "G2"
+    },
+    {
+      "Key": "O",
+      "ButtonName": "A2"
+    },
+    {
+      "Key": "P",
+      "ButtonName": "B2"
+    },
+
+    {
+      "Key": "Q",
+      "ButtonName": "C3"
+    },
+
+    {
+      "Key": "S",
+      "ButtonName": "CS1"
+    },
+    {
+      "Key": "D",
+      "ButtonName": "DS1"
+    },
+    {
+      "Key": "G",
+      "ButtonName": "FS1"
+    },
+    {
+      "Key": "H",
+      "ButtonName": "GS1"
+    },
+    {
+      "Key": "J",
+      "ButtonName": "AS1"
+    },
+
+    {
+      "Key": "D5",
+      "ButtonName": "CS2"
+    },
+    {
+      "Key": "D6",
+      "ButtonName": "DS2"
+    },
+    {
+      "Key": "D8",
+      "ButtonName": "FS2"
+    },
+    {
+      "Key": "D9",
+      "ButtonName": "GS2"
+    },
+    {
+      "Key": "D0",
+      "ButtonName": "AS2"
+    }
+  ]
+}

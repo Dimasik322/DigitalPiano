@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +12,8 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Newtonsoft.Json;
+
 
 namespace Digital_Piano {
     public partial class MainWindow : Window {
@@ -23,6 +27,7 @@ namespace Digital_Piano {
             tasks = new List<Task>();
 
             InitializeComponent();
+            InitializeKeyButtonMap();
         }
 
         private bool isNotesNamesVisible = false;
@@ -30,6 +35,41 @@ namespace Digital_Piano {
         private bool isExitMenuVisible = false;
         private bool isInstructionsVisible = false;
         private static readonly int[] time_sig = new int[] { 3, 4, 5, 6, 7 };
+        private Dictionary<Key, Button> keyButtonMap;
+        public class KeyButtonMapping {
+            public List<Mapping> Mappings { get; set; }
+        }
+        public class Mapping {
+            public string Key { get; set; }
+            public string ButtonName { get; set; }
+        }
+
+
+        private void InitializeKeyButtonMap() {
+            string jsonFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KeyMap.json");
+            if (File.Exists(jsonFilePath)) {
+                var jsonData = File.ReadAllText(jsonFilePath);
+                var mappings = JsonConvert.DeserializeObject<KeyButtonMapping>(jsonData);
+
+                keyButtonMap = new Dictionary<Key, Button>();
+                foreach (var mapping in mappings.Mappings) {
+                    Key key = (Key)Enum.Parse(typeof(Key), mapping.Key);
+                    Button button = FindName(mapping.ButtonName) as Button;
+                    if (button != null) {
+                        keyButtonMap[key] = button;
+                    }
+                }
+            }
+            else {
+                MessageBox.Show($"Путь к JSON файлу: {jsonFilePath}");
+            }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e) {
+            if (keyButtonMap.TryGetValue(e.Key, out Button button)) {
+                button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
+        }
 
         protected override void OnKeyDown(KeyEventArgs e) {
             base.OnKeyDown(e);
@@ -54,6 +94,11 @@ namespace Digital_Piano {
                     Application.Current.Shutdown();
                 }
             }
+            if (keyButtonMap.ContainsKey(e.Key)) {
+                Button button = keyButtonMap[e.Key];
+                button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
+
         }
 
         private void ToggleMenuButton_Click(object sender, RoutedEventArgs e) {
@@ -150,7 +195,6 @@ namespace Digital_Piano {
         }
 
         private void KeyClick(object sender, RoutedEventArgs e) {
-            Console.WriteLine(tasks.Count());
             Button clickedButton = sender as Button;
             if (clickedButton != null) {
                 int semitoneOffset = int.Parse(clickedButton.Tag.ToString());
@@ -240,7 +284,7 @@ namespace Digital_Piano {
         }
         private void IncreaseReverbValue(object sender, RoutedEventArgs e) {
             if (int.TryParse(ReverbInputField.Text, out int current_value)) {
-                if (current_value < 9) {
+                if (current_value < 10) {
                     ReverbInputField.Text = (current_value + 1).ToString();
                 }
             }
@@ -255,7 +299,7 @@ namespace Digital_Piano {
         }
         private void IncreaseChorusValue(object sender, RoutedEventArgs e) {
             if (int.TryParse(ChorusInputField.Text, out int current_value)) {
-                if (current_value < 3) {
+                if (current_value < 4) {
                     ChorusInputField.Text = (current_value + 1).ToString();
                 }
             }
@@ -302,5 +346,49 @@ namespace Digital_Piano {
                 }
             }
         }
+
+        //private void ReadMelodyFile(string path) {
+        //    double newFreq;
+        //    int newReverb;
+        //    int newChorus;
+        //    int newTempo;
+        //    int newTimeSig;
+
+        //    using (var reader = new StreamReader(path)) {
+        //        string configLine = reader.ReadLine();
+        //        if (configLine != null) {
+        //            var parts = configLine.Split('|');
+        //            newFreq = double.Parse(parts[0]);
+        //            newReverb = int.Parse(parts[1]);
+        //            newChorus = int.Parse(parts[2]);
+        //            newTempo = int.Parse(parts[3]);
+        //            newTimeSig = int.Parse(parts[4]);
+        //        }
+        //        var chordsList = new List<(double startTime, List<(int semitone, double time)>)>();
+
+        //        while (!reader.EndOfStream) {
+        //            string line = reader.ReadLine();
+        //            if (string.IsNullOrWhiteSpace(line)) continue;
+        //            var chordStartTime = double(line.Split(':')[0]);
+        //            var chordNotes = line.Split('|');
+
+        //            melodyConfig.StartTime = double.Parse(startTimeParts[0]);
+
+        //            // Обработка нот
+        //            for (int i = 1; i < noteParts.Length; i++) {
+        //                if (string.IsNullOrWhiteSpace(noteParts[i])) continue;
+
+        //                var noteInfo = noteParts[i].Split(':');
+        //                int semitoneOffset = int.Parse(noteInfo[0]);
+        //                double time = double.Parse(noteInfo[1]);
+        //                notesList.Add((time, semitoneOffset));
+        //            }
+        //        }
+
+        //        melodyConfig.Notes = notesList.ToArray();
+        //    }
+
+        //    return melodyConfig;
+        //}
     }
 }
