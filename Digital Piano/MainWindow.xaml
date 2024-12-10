@@ -371,6 +371,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <StackPanel x:Name="VolumeSliderPanel" Grid.Column="0" VerticalAlignment="Top">
@@ -538,6 +539,15 @@
                                     </ControlTemplate>
                                 </Slider.Template>
                             </Slider>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel x:Name="GameSwitchPanel" Grid.Column="5" VerticalAlignment="Top" Width="250">
+                    <Border Style="{StaticResource ControlsContainerStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Игра 'Угадай Ноту'" Style="{StaticResource LabelText}"/>
+                            <ToggleButton Style="{StaticResource SwitchStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="GuessNoteGameClick"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>

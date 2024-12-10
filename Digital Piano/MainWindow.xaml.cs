@@ -30,6 +30,7 @@ namespace Digital_Piano {
             InitializeKeyButtonMap();
         }
 
+        private bool gameSelected = false;
         private bool isNotesNamesVisible = false;
         private bool isMenuVisible = false;
         private bool isExitMenuVisible = false;
@@ -347,48 +348,78 @@ namespace Digital_Piano {
             }
         }
 
-        //private void ReadMelodyFile(string path) {
-        //    double newFreq;
-        //    int newReverb;
-        //    int newChorus;
-        //    int newTempo;
-        //    int newTimeSig;
+        private async void GuessNoteGameClick(object sender, RoutedEventArgs e) {
+            if (gameSelected) {
+                cancellationTokenSource?.Cancel();
+            }
+            else {
+                cancellationTokenSource = new CancellationTokenSource();
+                await StartGame(cancellationTokenSource.Token);
+            }
+            gameSelected = !gameSelected;
+        }
 
-        //    using (var reader = new StreamReader(path)) {
-        //        string configLine = reader.ReadLine();
-        //        if (configLine != null) {
-        //            var parts = configLine.Split('|');
-        //            newFreq = double.Parse(parts[0]);
-        //            newReverb = int.Parse(parts[1]);
-        //            newChorus = int.Parse(parts[2]);
-        //            newTempo = int.Parse(parts[3]);
-        //            newTimeSig = int.Parse(parts[4]);
-        //        }
-        //        var chordsList = new List<(double startTime, List<(int semitone, double time)>)>();
+        private async Task<bool> WaitForUserInput(int expectedNote, CancellationToken cancellationToken) {
+            var taskC = new TaskCompletionSource<bool>();
+            RoutedEventHandler handler = null;
+            handler = (s, e) => {
+                Button clickedButton = s as Button;
+                if (clickedButton != null) {
+                    int semitoneOffset = int.Parse(clickedButton.Tag.ToString());
+                    if (expectedNote == semitoneOffset + (piano.pitch * 12)) {
+                        taskC.SetResult(true);
+                    }
+                    else {
+                        taskC.SetResult(false);
+                    }
+                    foreach (var button in FindVisualChildren<Button>(this)) {
+                        button.Click -= handler;
+                    }
+                }
+            };
+            foreach (var button in FindVisualChildren<Button>(this)) {
+                button.Click += handler;
+            }
+            using (cancellationToken.Register(() => taskC.TrySetCanceled())) {
+                return await taskC.Task;
+            }
+        }
 
-        //        while (!reader.EndOfStream) {
-        //            string line = reader.ReadLine();
-        //            if (string.IsNullOrWhiteSpace(line)) continue;
-        //            var chordStartTime = double(line.Split(':')[0]);
-        //            var chordNotes = line.Split('|');
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject {
+            if (depObj != null) {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++) {
+                    var child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child != null && child is T) {
+                        yield return (T)child;
+                    }
+                    foreach (var childOfChild in FindVisualChildren<T>(child)) {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
 
-        //            melodyConfig.StartTime = double.Parse(startTimeParts[0]);
+        private async Task StartGame(CancellationToken cancellationToken) {
+            while (!cancellationToken.IsCancellationRequested) {
+                int randomNote = GetRandomNote();
+                await piano.PlayCachedTone(randomNote);
+                bool isCorrect = await WaitForUserInput(randomNote, cancellationToken);
+                if (isCorrect) {
+                    MessageBox.Show("Вы выиграли!");
+                }
+                else {
+                    MessageBox.Show("Вы проиграли!");
+                }
+                await Task.Delay(5000);
+            }
+        }
 
-        //            // Обработка нот
-        //            for (int i = 1; i < noteParts.Length; i++) {
-        //                if (string.IsNullOrWhiteSpace(noteParts[i])) continue;
+        private Random random = new Random();
+        private CancellationTokenSource cancellationTokenSource;
 
-        //                var noteInfo = noteParts[i].Split(':');
-        //                int semitoneOffset = int.Parse(noteInfo[0]);
-        //                double time = double.Parse(noteInfo[1]);
-        //                notesList.Add((time, semitoneOffset));
-        //            }
-        //        }
+        private int GetRandomNote() {
+            return random.Next((piano.pitch * 12) - 9, (piano.pitch * 12) + 15);
+        }
 
-        //        melodyConfig.Notes = notesList.ToArray();
-        //    }
-
-        //    return melodyConfig;
-        //}
     }
 }
