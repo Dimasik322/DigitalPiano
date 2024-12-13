@@ -488,7 +488,7 @@
                     <Border Style="{StaticResource ControlsContainerStyle}">
                         <StackPanel>
                             <TextBlock Text="МЕТРОНОМ" Style="{StaticResource LabelText}"/>
-                            <ToggleButton Style="{StaticResource SwitchStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <ToggleButton Style="{StaticResource SwitchStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="MetroClick"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>

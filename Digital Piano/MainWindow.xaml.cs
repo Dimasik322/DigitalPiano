@@ -67,53 +67,48 @@ namespace Digital_Piano {
             }
         }
 
-        private bool isKeyHandled = false;
+        private HashSet<Key> pressedKeys = new HashSet<Key>();
+
         protected override void OnKeyDown(KeyEventArgs e) {
             base.OnKeyDown(e);
-            if (isKeyHandled) {
+            if (pressedKeys.Contains(e.Key)) {
                 return;
             }
+            pressedKeys.Add(e.Key);
             if (e.Key == Key.Escape) {
                 if (isInstructionsVisible) {
                     HideHelpPanel();
-                    isKeyHandled = true;
                     return;
                 }
                 if (isMenuVisible) {
                     HideSideBarMenu();
-                    isKeyHandled = true;
                     return;
                 }
                 if (!isExitMenuVisible) {
                     ShowExitMenu();
-                    isKeyHandled = true;
                     return;
                 }
                 if (isExitMenuVisible) {
                     HideExitMenu();
-                    isKeyHandled = true;
                     return;
                 }
             }
-
             if (e.Key == Key.Enter) {
                 if (isExitMenuVisible) {
                     Application.Current.Shutdown();
+                    return;
                 }
-                isKeyHandled = true;
-                return;
             }
-
             if (keyButtonMap.ContainsKey(e.Key)) {
                 Button button = keyButtonMap[e.Key];
                 VisualStateManager.GoToState(button, "IsPressed", true);
                 button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                isKeyHandled = true;
                 return;
             }
         }
         protected override void OnKeyUp(KeyEventArgs e) {
-            isKeyHandled = false;
+            base.OnKeyUp(e);
+            pressedKeys.Remove(e.Key);
         }
 
         private void ToggleMenuButton_Click(object sender, RoutedEventArgs e) {
@@ -173,13 +168,13 @@ namespace Digital_Piano {
             if (parts.Length == 2) {
                 if (int.TryParse(parts[0], out int firstNumber)) {
                     int index = firstNumber - 3;
-                    firstNumber = time_sig[index - 1];
-                    piano.metro.current_size = firstNumber;
+                    firstNumber = time_sig[index];
+                    piano.metro.currentSig = firstNumber;
                 }
             }
 
             piano.InitializeTones();
-            //piano.metro.InitializeMetro();
+            piano.metro.InitializeBeats();
 
             Storyboard hideMenu = (Storyboard)FindResource("HideMenuAnimation");
             hideMenu.Completed += (s, ev) => {
@@ -258,6 +253,15 @@ namespace Digital_Piano {
             }
         }
 
+        private void MetroClick(object sender, RoutedEventArgs e) {
+            if (piano.metro.isMetroStarted) {
+                piano.metro.StopMetronome();
+            }
+            else {
+                _ = piano.metro.StartMetronome();
+            }
+        }
+
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (VolumeSlider != null) {
                 int newVolume = (int)VolumeSlider.Value;
@@ -315,7 +319,7 @@ namespace Digital_Piano {
         }
         private void IncreaseChorusValue(object sender, RoutedEventArgs e) {
             if (int.TryParse(ChorusInputField.Text, out int current_value)) {
-                if (current_value < 4) {
+                if (current_value < 3) {
                     ChorusInputField.Text = (current_value + 1).ToString();
                 }
             }
@@ -330,7 +334,7 @@ namespace Digital_Piano {
         }
         private void IncreaseMetroTempoValue(object sender, RoutedEventArgs e) {
             if (int.TryParse(MetroTempoInputField.Text, out int current_value)) {
-                if (current_value < 240) {
+                if (current_value < 199) {
                     MetroTempoInputField.Text = (current_value + 1).ToString();
                 }
             }
