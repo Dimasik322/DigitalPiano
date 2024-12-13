@@ -36,6 +36,7 @@ namespace Digital_Piano {
         private bool isExitMenuVisible = false;
         private bool isInstructionsVisible = false;
         private static readonly int[] time_sig = new int[] { 3, 4, 5, 6, 7 };
+
         private Dictionary<Key, Button> keyButtonMap;
         public class KeyButtonMapping {
             public List<Mapping> Mappings { get; set; }
@@ -66,40 +67,53 @@ namespace Digital_Piano {
             }
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e) {
-            if (keyButtonMap.TryGetValue(e.Key, out Button button)) {
-                button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            }
-        }
-
+        private bool isKeyHandled = false;
         protected override void OnKeyDown(KeyEventArgs e) {
             base.OnKeyDown(e);
+            if (isKeyHandled) {
+                return;
+            }
             if (e.Key == Key.Escape) {
                 if (isInstructionsVisible) {
                     HideHelpPanel();
+                    isKeyHandled = true;
                     return;
                 }
                 if (isMenuVisible) {
                     HideSideBarMenu();
+                    isKeyHandled = true;
                     return;
                 }
                 if (!isExitMenuVisible) {
                     ShowExitMenu();
+                    isKeyHandled = true;
                     return;
                 }
-                HideExitMenu();
-                return;
+                if (isExitMenuVisible) {
+                    HideExitMenu();
+                    isKeyHandled = true;
+                    return;
+                }
             }
+
             if (e.Key == Key.Enter) {
                 if (isExitMenuVisible) {
                     Application.Current.Shutdown();
                 }
-            }
-            if (keyButtonMap.ContainsKey(e.Key)) {
-                Button button = keyButtonMap[e.Key];
-                button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                isKeyHandled = true;
+                return;
             }
 
+            if (keyButtonMap.ContainsKey(e.Key)) {
+                Button button = keyButtonMap[e.Key];
+                VisualStateManager.GoToState(button, "IsPressed", true);
+                button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                isKeyHandled = true;
+                return;
+            }
+        }
+        protected override void OnKeyUp(KeyEventArgs e) {
+            isKeyHandled = false;
         }
 
         private void ToggleMenuButton_Click(object sender, RoutedEventArgs e) {
@@ -254,6 +268,7 @@ namespace Digital_Piano {
             if (SustainSlider != null) {
                 int newSustainLevel = (int)SustainSlider.Value;
                 piano.sustain = newSustainLevel;
+                piano.InitializeTones();
             }
         }
         private void PitchSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
@@ -359,7 +374,6 @@ namespace Digital_Piano {
                 await StartGame(cancellationTokenSource.Token);
             }
         }
-
         private async Task<bool> WaitForUserInput(int expectedNote, CancellationToken cancellationToken) {
             var taskC = new TaskCompletionSource<bool>();
             RoutedEventHandler handler = null;
@@ -385,7 +399,6 @@ namespace Digital_Piano {
                 return await taskC.Task;
             }
         }
-
         private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject {
             if (depObj != null) {
                 for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++) {
@@ -399,7 +412,6 @@ namespace Digital_Piano {
                 }
             }
         }
-
         private async Task StartGame(CancellationToken cancellationToken) {
             while (!cancellationToken.IsCancellationRequested) {
                 int randomNote = GetRandomNote();
@@ -417,7 +429,6 @@ namespace Digital_Piano {
 
         private Random random = new Random();
         private CancellationTokenSource cancellationTokenSource;
-
         private int GetRandomNote() {
             return random.Next((piano.pitch * 12) - 9, (piano.pitch * 12) + 15);
         }

@@ -20,6 +20,7 @@ namespace Digital_Piano {
 
         private int lowest_semitone = -33;
         private int highest_semitone = 39;
+        private double timeToPercent = Math.Log(100);
 
         public Dictionary<int, float[]> toneCache = new Dictionary<int, float[]>();
 
@@ -51,16 +52,22 @@ namespace Digital_Piano {
         }
 
         private void GenerateTone(int semitoneOffset, double durationSeconds) {
-            int samplesCount = (int)(SampleRate * durationSeconds);
+            double adjustedDuration = durationSeconds * timeToPercent;
+            int samplesCount = (int)(SampleRate * adjustedDuration);
             var buffer = new float[samplesCount];
+            double frequency = GetNoteFrequency(semitoneOffset);
             for (int i = 0; i < samplesCount; i++) {
-                buffer[i] = (float)Math.Sin(2 * Math.PI * GetNoteFrequency(semitoneOffset) * i / SampleRate);
+                double t = i / (double)SampleRate;
+                buffer[i] = (float)Math.Sin(2 * Math.PI * frequency * t);
             }
+
             buffer = AddOvertones(buffer, semitoneOffset);
             buffer = AddReverb(buffer);
             buffer = AddChorus(buffer);
+
             toneCache[semitoneOffset] = buffer;
         }
+
 
         public void InitializeTones() {
             for (int i = lowest_semitone; i <= highest_semitone; i++) {
@@ -75,21 +82,8 @@ namespace Digital_Piano {
         public async Task PlayCachedTone(int semitoneOffset) {
             if (toneCache.TryGetValue((semitoneOffset + pitch * 12), out var buffer)) {
                 float volumeFactor = volume / 2000f;
-                double lambda;
-                switch (sustain) {
-                    case 0:
-                        lambda = 5.0;
-                        break;
-                    case 1:
-                        lambda = 2.0;
-                        break;
-                    case 2:
-                        lambda = 0.5;
-                        break;
-                    default:
-                        lambda = 5.0;
-                        break;
-                }
+                double lambda = sustain == 0 ? 8.0 : (sustain == 1 ? 3.0 : 1.0);
+                double durationSeconds = buffer.Length / (double)SampleRate;
                 var adjustedBuffer = new float[buffer.Length];
                 for (int i = 0; i < buffer.Length; i++) {
                     double t = i / (double)SampleRate;
@@ -101,7 +95,7 @@ namespace Digital_Piano {
                     waveProvider.AddSamples(GetByteArrayFromFloatArray(adjustedBuffer), 0, adjustedBuffer.Length * sizeof(float));
                     waveOut.Init(waveProvider);
                     waveOut.Play();
-                    await Task.Delay((int)(1.0 * 1000));
+                    await Task.Delay((int)(durationSeconds * 1000 / lambda));
                 }
             }
             else {
