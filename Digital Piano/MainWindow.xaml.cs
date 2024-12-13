@@ -351,12 +351,13 @@ namespace Digital_Piano {
         private async void GuessNoteGameClick(object sender, RoutedEventArgs e) {
             if (gameSelected) {
                 cancellationTokenSource?.Cancel();
+                gameSelected = false;
             }
             else {
+                gameSelected = true;
                 cancellationTokenSource = new CancellationTokenSource();
                 await StartGame(cancellationTokenSource.Token);
             }
-            gameSelected = !gameSelected;
         }
 
         private async Task<bool> WaitForUserInput(int expectedNote, CancellationToken cancellationToken) {

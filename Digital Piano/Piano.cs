@@ -74,9 +74,31 @@ namespace Digital_Piano {
 
         public async Task PlayCachedTone(int semitoneOffset) {
             if (toneCache.TryGetValue((semitoneOffset + pitch * 12), out var buffer)) {
+                float volumeFactor = volume / 2000f;
+                double lambda;
+                switch (sustain) {
+                    case 0:
+                        lambda = 5.0;
+                        break;
+                    case 1:
+                        lambda = 2.0;
+                        break;
+                    case 2:
+                        lambda = 0.5;
+                        break;
+                    default:
+                        lambda = 5.0;
+                        break;
+                }
+                var adjustedBuffer = new float[buffer.Length];
+                for (int i = 0; i < buffer.Length; i++) {
+                    double t = i / (double)SampleRate;
+                    double amplitude = Math.Exp(-lambda * t);
+                    adjustedBuffer[i] = buffer[i] * volumeFactor * (float)amplitude;
+                }
                 using (var waveOut = new WaveOutEvent()) {
                     var waveProvider = new BufferedWaveProvider(WaveFormat.CreateIeeeFloatWaveFormat(SampleRate, 1));
-                    waveProvider.AddSamples(GetByteArrayFromFloatArray(buffer), 0, buffer.Length * sizeof(float));
+                    waveProvider.AddSamples(GetByteArrayFromFloatArray(adjustedBuffer), 0, adjustedBuffer.Length * sizeof(float));
                     waveOut.Init(waveProvider);
                     waveOut.Play();
                     await Task.Delay((int)(1.0 * 1000));
