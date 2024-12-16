@@ -70,7 +70,7 @@ namespace Digital_Piano {
 
         public class LaunchLimit {
             private static string FilePath = "launch_count.dat";
-            private static int MaxLaunches = 5;
+            private static int MaxLaunches = 100;
 
             public static int GetCurrentLaunchCount() {
                 if (!File.Exists(FilePath)) {
