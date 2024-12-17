@@ -38,10 +38,10 @@ namespace Digital_Piano {
         private static readonly int[] time_sig = new int[] { 3, 4, 5, 6, 7 };
 
         private Dictionary<Key, Button> keyButtonMap;
-        public class KeyButtonMapping {
+        private class KeyButtonMapping {
             public List<Mapping> Mappings { get; set; }
         }
-        public class Mapping {
+        private class Mapping {
             public string Key { get; set; }
             public string ButtonName { get; set; }
         }

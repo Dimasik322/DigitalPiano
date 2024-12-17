@@ -22,7 +22,7 @@ namespace Digital_Piano {
         private int highest_semitone = 39;
         private double timeToPercent = Math.Log(100);
 
-        public Dictionary<int, float[]> toneCache = new Dictionary<int, float[]>();
+        private Dictionary<int, float[]> toneCache = new Dictionary<int, float[]>();
 
         public class Metro {
             public int tempo;
