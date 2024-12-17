@@ -14,7 +14,7 @@ namespace Digital_Piano {
         public int sustain;
         public int reverb;
         public int chorus;
-        internal int volume;
+        public int volume;
         public int pitch;
         public Metro metro;
 
@@ -36,22 +36,21 @@ namespace Digital_Piano {
             public Metro() {
                 this.tempo = 60;
                 this.currentSig = 4;
-                this.timeSig = new int[] { 3, 4, 5, 6, 7 };
-
-                InitializeBeats();    
+                this.timeSig = new int[] { 3, 4, 5, 6, 7 }; 
             }
 
             private const int SampleRate = 44100;
             private const double StrongBeatFrequency = 1000.0;
             private const double WeakBeatFrequency = 800.0;
 
-            public void InitializeBeats() {
-                beatCache[0] = GenerateClick(StrongBeatFrequency, 0.3);
-                beatCache[1] = GenerateClick(WeakBeatFrequency, 0.3);
+            public void InitializeBeats(Piano pianoInstance) {
+                beatCache[0] = GenerateClick(StrongBeatFrequency, 0.3, pianoInstance.volume);
+                beatCache[1] = GenerateClick(WeakBeatFrequency, 0.3, pianoInstance.volume);
             }
 
-            private float[] GenerateClick(double frequency, double durationSeconds) {
+            private float[] GenerateClick(double frequency, double durationSeconds, int pianoVolume) {
                 int samplesCount = (int)(SampleRate * durationSeconds);
+                float volumeFactor = pianoVolume / 500f;
                 var buffer = new float[samplesCount];
                 double attackDuration = 0.1;
                 double decayDuration = 0.1;
@@ -70,7 +69,7 @@ namespace Digital_Piano {
                     else {
                         amplitude = 0.0;
                     }
-                    buffer[i] = (float)(Math.Sin(2 * Math.PI * frequency * t) * Math.Exp(-5 * t) * amplitude);
+                    buffer[i] = (float)(Math.Sin(2 * Math.PI * frequency * t) * Math.Exp(-5 * t) * volumeFactor * amplitude);
                 }
                 return buffer;
             }
@@ -144,6 +143,7 @@ namespace Digital_Piano {
             InitializeTones();
 
             this.metro = new Metro();
+            metro.InitializeBeats(this);
         }
 
         private void GenerateTone(int semitoneOffset, double durationSeconds) {
@@ -151,9 +151,26 @@ namespace Digital_Piano {
             int samplesCount = (int)(SampleRate * adjustedDuration);
             var buffer = new float[samplesCount];
             double frequency = GetNoteFrequency(semitoneOffset);
+
+            double attackDuration = 0.3;
+            double decayDuration = 0.2;
+            int attackSamples = (int)(SampleRate * attackDuration);
+            int decaySamples = (int)(SampleRate * decayDuration);
+
             for (int i = 0; i < samplesCount; i++) {
                 double t = i / (double)SampleRate;
-                buffer[i] = (float)Math.Sin(2 * Math.PI * frequency * t);
+                double amplitude = 1.0;
+                if (i < attackSamples) {
+                    amplitude = (double)i / attackSamples;
+                }
+                else if (i < attackSamples + decaySamples) {
+                    amplitude = 1.0 - (double)(i - attackSamples) / decaySamples;
+                }
+                else {
+                    amplitude = 0.0;
+                }
+
+                buffer[i] = (float)(Math.Sin(2 * Math.PI * frequency * t) * amplitude);
             }
 
             buffer = AddOvertones(buffer, semitoneOffset);
@@ -162,7 +179,6 @@ namespace Digital_Piano {
 
             toneCache[semitoneOffset] = buffer;
         }
-
 
         public void InitializeTones() {
             for (int i = lowest_semitone; i <= highest_semitone; i++) {

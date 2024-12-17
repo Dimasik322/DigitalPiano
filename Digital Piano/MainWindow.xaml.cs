@@ -174,7 +174,7 @@ namespace Digital_Piano {
             }
 
             piano.InitializeTones();
-            piano.metro.InitializeBeats();
+            piano.metro.InitializeBeats(piano);
 
             Storyboard hideMenu = (Storyboard)FindResource("HideMenuAnimation");
             hideMenu.Completed += (s, ev) => {
@@ -266,6 +266,7 @@ namespace Digital_Piano {
             if (VolumeSlider != null) {
                 int newVolume = (int)VolumeSlider.Value;
                 piano.volume = newVolume;
+                piano.metro.InitializeBeats(piano);
             }
         }
         private void SustainSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
