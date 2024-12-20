@@ -68,7 +68,7 @@ namespace Digital_Piano {
                 int currentCount = GetCurrentLaunchCount();
                 File.WriteAllText(FilePath, (currentCount + 1).ToString());
             }
-
+                
             private static DateTime GetNetworkTime() {
                 const int ntpDataLength = 48;
                 byte[] ntpData = new byte[ntpDataLength];

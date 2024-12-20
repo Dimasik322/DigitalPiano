@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
+using static System.Windows.Forms.LinkLabel;
 
 
 namespace Digital_Piano {
@@ -35,6 +36,13 @@ namespace Digital_Piano {
         private bool isMenuVisible = false;
         private bool isExitMenuVisible = false;
         private bool isInstructionsVisible = false;
+        private bool isRecordingStarted = false;
+        private bool isRecorded = false;
+        private bool isPlaying = false;
+        private Task player;
+        private List<string> playedNotes;
+        private DateTime recordStart;
+        private bool isKeyboardInputEnabled = false;
         private static readonly int[] time_sig = new int[] { 3, 4, 5, 6, 7 };
 
         private Dictionary<Key, Button> keyButtonMap;
@@ -76,6 +84,10 @@ namespace Digital_Piano {
             }
             pressedKeys.Add(e.Key);
             if (e.Key == Key.Escape) {
+                if (isKeyboardInputEnabled) {
+                    isKeyboardInputEnabled = false;
+                    return;
+                }
                 if (isInstructionsVisible) {
                     HideHelpPanel();
                     return;
@@ -98,6 +110,9 @@ namespace Digital_Piano {
                     Application.Current.Shutdown();
                     return;
                 }
+            }
+            if (isKeyboardInputEnabled) {
+                return;
             }
             if (keyButtonMap.ContainsKey(e.Key)) {
                 Button button = keyButtonMap[e.Key];
@@ -134,8 +149,7 @@ namespace Digital_Piano {
         }
         private void HideExitMenu() {
             Storyboard hideMenu = (Storyboard)FindResource("HideExitMenuAnimation");
-            hideMenu.Completed += (s, e) =>
-            {
+            hideMenu.Completed += (s, e) => {
                 Overlay.Visibility = Visibility.Collapsed;
             };
             hideMenu.Begin();
@@ -210,6 +224,9 @@ namespace Digital_Piano {
                 int semitoneOffset = int.Parse(clickedButton.Tag.ToString());
                 if (piano != null) {
                     Task task = piano.PlayCachedTone(semitoneOffset);
+                    if (isRecordingStarted) {
+                        playedNotes.Add($"{semitoneOffset}:{(int)((DateTime.Now - recordStart).TotalMilliseconds)}");
+                    }
                     tasks.Add(task);
                 }
             }
@@ -438,5 +455,61 @@ namespace Digital_Piano {
             return random.Next((piano.pitch * 12) - 9, (piano.pitch * 12) + 15);
         }
 
+        private void TextBlockGotFocus(object sender, RoutedEventArgs e) {
+            isKeyboardInputEnabled = true;
+        }
+
+        private void RecordClick(object sender, RoutedEventArgs e) {
+            if (!isRecordingStarted) {
+                recordStart = DateTime.Now;
+                playedNotes = new List<string>();
+            }
+            isRecordingStarted = !isRecordingStarted;
+        }
+
+        private void SaveRecordingClick(object sender, RoutedEventArgs e) {
+            string filePath = FileNameTextBox.Text + ".txt";
+            try {
+                using (StreamWriter writer = new StreamWriter(filePath)) {
+                    foreach (string note in playedNotes) {
+                        writer.WriteLine(note);
+                    }
+                }
+                MessageBox.Show($"Запись успешно сохранена!\nПуть к файлу: {filePath}", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex) {
+                MessageBox.Show($"Ошибка при сохранении нот: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void PlayRecordingClick(object sender, RoutedEventArgs e) {
+            if (isPlaying) {
+                player.Wait();
+            }
+            string filePath = FileNameTextBox.Text + ".txt";
+            try {
+                using (StreamReader reader = new StreamReader(filePath)) {
+                    playedNotes.Clear();
+                    string line;
+                    while ((line = reader.ReadLine()) != null) {
+                        playedNotes.Add(line);
+                    }
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show($"Ошибка при загрузке нот: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            int lastTime = 0;
+            foreach (string note in playedNotes) {
+                string[] parts = note.Split(':');
+                if (parts.Length == 2) {
+                    if (int.TryParse(parts[0], out int semitoneOffset) && int.TryParse(parts[1], out int delay)) {
+                        await Task.Delay(delay - lastTime);
+                        lastTime = delay;
+                        piano.PlayCachedTone(semitoneOffset);
+                    }
+                }
+            }
+        }
     }
 }

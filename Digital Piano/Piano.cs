@@ -40,8 +40,8 @@ namespace Digital_Piano {
             }
 
             private const int SampleRate = 44100;
-            private const double StrongBeatFrequency = 1000.0;
-            private const double WeakBeatFrequency = 800.0;
+            private const double StrongBeatFrequency = 440.0;
+            private const double WeakBeatFrequency = 320.0;
 
             public void InitializeBeats(Piano pianoInstance) {
                 beatCache[0] = GenerateClick(StrongBeatFrequency, 0.3, pianoInstance.volume);
@@ -192,7 +192,7 @@ namespace Digital_Piano {
 
         public async Task PlayCachedTone(int semitoneOffset) {
             if (toneCache.TryGetValue((semitoneOffset + pitch * 12), out var buffer)) {
-                float volumeFactor = volume / 2000f;
+                float volumeFactor = volume / 1000f;
                 double lambda = sustain == 0 ? 8.0 : (sustain == 1 ? 3.0 : 1.0);
                 double durationSeconds = buffer.Length / (double)SampleRate;
                 var adjustedBuffer = new float[buffer.Length];

@@ -695,6 +695,89 @@
                 </Grid>
             </Grid>
 
+
+            <Grid x:Name="Recordings" Margin="100, 600, 100, 100">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel x:Name="RecordingPanel" Grid.Column="0" VerticalAlignment="Top" Width="200">
+                    <Border Style="{StaticResource ControlsContainerStyle}">
+                        <StackPanel>
+                            <TextBlock Text="ЗАПИСЬ" Style="{StaticResource LabelText}"/>
+                            <ToggleButton Style="{StaticResource SwitchStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="RecordClick"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel x:Name="FileNamePanel" Grid.Column="1" VerticalAlignment="Top" Width="300">
+                    <Border Style="{StaticResource ControlsContainerStyle}">
+                        <StackPanel>
+                            <TextBlock Text="НАЗВАНИЕ ФАЙЛА" Style="{StaticResource LabelText}"/>
+                            <TextBox Name="FileNameTextBox" Padding="30,5,30,5" Width="260" HorizontalAlignment="Center" VerticalAlignment="Center" GotFocus="TextBlockGotFocus"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel x:Name="SaveButtonPanel" Grid.Column="2" VerticalAlignment="Top" Width="200">
+                    <Border Style="{StaticResource ControlsContainerStyle}">
+                        <StackPanel>
+                            <Button x:Name="SaveRecordingButton"
+                                Content="СОХРАНИТЬ"
+                                Width="120"
+                                Height="50"
+                                Margin="0"
+                                Padding="0"
+                                Style="{StaticResource SideBarMenuButtonStyle}"
+                                FontSize="18"
+                                Click="SaveRecordingClick">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="15">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel x:Name="PlayButtonPanel" Grid.Column="3" VerticalAlignment="Top" Width="200">
+                    <Border Style="{StaticResource ControlsContainerStyle}">
+                        <StackPanel>
+                            <Button x:Name="PlayRecordingButton"
+                                Content="СЫГРАТЬ"
+                                Width="120"
+                                Height="50"
+                                Margin="0"
+                                Padding="0"
+                                Style="{StaticResource SideBarMenuButtonStyle}"
+                                FontSize="18"
+                                Click="PlayRecordingClick"> 
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="15">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+            </Grid>
+
         </Grid>
 
         <Grid x:Name="Overlay" Background="Black" Opacity="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Collapsed"/>
