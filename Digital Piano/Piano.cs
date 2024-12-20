@@ -214,6 +214,12 @@ namespace Digital_Piano {
             }
         }
 
+        public int NotePlayTime() {
+            double lambda = sustain == 0 ? 8.0 : (sustain == 1 ? 3.0 : 1.0);
+            int durationSeconds = (int)(1000 / lambda);
+            return durationSeconds;
+        }
+
         private byte[] GetByteArrayFromFloatArray(float[] buffer) {
             var byteArray = new byte[buffer.Length * sizeof(float)];
             Buffer.BlockCopy(buffer, 0, byteArray, 0, byteArray.Length);

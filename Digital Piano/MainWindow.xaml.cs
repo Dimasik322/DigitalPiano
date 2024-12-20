@@ -116,14 +116,25 @@ namespace Digital_Piano {
             }
             if (keyButtonMap.ContainsKey(e.Key)) {
                 Button button = keyButtonMap[e.Key];
-                VisualStateManager.GoToState(button, "IsPressed", true);
                 button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                button.Background = new SolidColorBrush(Color.FromRgb(150, 150, 150));
+                button.BorderBrush = new SolidColorBrush(Color.FromRgb(136, 136, 136));
                 return;
-            }
+            }   
         }
         protected override void OnKeyUp(KeyEventArgs e) {
             base.OnKeyUp(e);
             pressedKeys.Remove(e.Key);
+            if (keyButtonMap.ContainsKey(e.Key)) {
+                Button button = keyButtonMap[e.Key];
+                if (button.Name.Length == 2) {
+                    button.Background = new SolidColorBrush(Colors.White);
+                }
+                else {
+                    button.Background = new SolidColorBrush(Colors.Black);
+                }
+                button.BorderBrush = new SolidColorBrush(Color.FromRgb(107, 112, 80));
+            }
         }
 
         private void ToggleMenuButton_Click(object sender, RoutedEventArgs e) {
@@ -225,7 +236,7 @@ namespace Digital_Piano {
                 if (piano != null) {
                     Task task = piano.PlayCachedTone(semitoneOffset);
                     if (isRecordingStarted) {
-                        playedNotes.Add($"{semitoneOffset}:{(int)((DateTime.Now - recordStart).TotalMilliseconds)}");
+                        playedNotes.Add($"{semitoneOffset}:{(int)((DateTime.Now - recordStart).TotalMilliseconds)}:{clickedButton.Name}");
                     }
                     tasks.Add(task);
                 }
@@ -468,7 +479,7 @@ namespace Digital_Piano {
         }
 
         private void SaveRecordingClick(object sender, RoutedEventArgs e) {
-            string filePath = FileNameTextBox.Text + ".txt";
+            string filePath = FileNameTextBox.Text + ".oreshnik";
             try {
                 using (StreamWriter writer = new StreamWriter(filePath)) {
                     foreach (string note in playedNotes) {
@@ -484,12 +495,13 @@ namespace Digital_Piano {
 
         private async void PlayRecordingClick(object sender, RoutedEventArgs e) {
             if (isPlaying) {
-                player.Wait();
+                return;
             }
-            string filePath = FileNameTextBox.Text + ".txt";
+            isPlaying = true;
+            string filePath = FileNameTextBox.Text + ".oreshnik";
             try {
                 using (StreamReader reader = new StreamReader(filePath)) {
-                    playedNotes.Clear();
+                    playedNotes = new List<string>();
                     string line;
                     while ((line = reader.ReadLine()) != null) {
                         playedNotes.Add(line);
@@ -500,16 +512,37 @@ namespace Digital_Piano {
                 MessageBox.Show($"Ошибка при загрузке нот: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             int lastTime = 0;
+            int deltaTime = 0;
+            Button button = null;
             foreach (string note in playedNotes) {
                 string[] parts = note.Split(':');
-                if (parts.Length == 2) {
+                if (parts.Length == 3) {
                     if (int.TryParse(parts[0], out int semitoneOffset) && int.TryParse(parts[1], out int delay)) {
-                        await Task.Delay(delay - lastTime);
+                        deltaTime = delay - lastTime;
+                        await Task.Delay(deltaTime);
                         lastTime = delay;
-                        piano.PlayCachedTone(semitoneOffset);
+                        button = (Button)this.FindName(parts[2]);
+                        button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        button.Background = new SolidColorBrush(Color.FromRgb(150, 150, 150));
+                        button.BorderBrush = new SolidColorBrush(Color.FromRgb(136, 136, 136));
+                        Task.Delay(piano.NotePlayTime()).ContinueWith(_ =>
+                        {
+                            Dispatcher.Invoke(() =>
+                            {
+                                if (button.Name.Length == 2) {
+                                    button.Background = new SolidColorBrush(Colors.White);
+                                }
+                                else {
+                                    button.Background = new SolidColorBrush(Colors.Black);
+                                }
+                                button.BorderBrush = new SolidColorBrush(Color.FromRgb(107, 112, 80));
+                            });
+                        });
                     }
                 }
             }
+            isPlaying = false;
         }
+
     }
 }
