@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -12,6 +13,8 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NAudio.Midi;
+using NAudio.Mixer;
 using Newtonsoft.Json;
 using static System.Windows.Forms.LinkLabel;
 
@@ -43,7 +46,15 @@ namespace Digital_Piano {
         private List<string> playedNotes;
         private DateTime recordStart;
         private bool isKeyboardInputEnabled = false;
+        private bool isGameEnabled = false;
+        private int difficultyLevel = 1;
         private static readonly int[] time_sig = new int[] { 3, 4, 5, 6, 7 };
+
+        private Dictionary<int, string> gameSongsPaths = new Dictionary<int, string> {
+            { 1, "easy.oreshnik" },
+            { 2, "medium.oreshnik" },
+            { 3 , "hard.oreshnik" }
+        };
 
         private Dictionary<Key, Button> keyButtonMap;
         private class KeyButtonMapping {
@@ -493,28 +504,28 @@ namespace Digital_Piano {
             }
         }
 
-        private async void PlayRecordingClick(object sender, RoutedEventArgs e) {
-            if (isPlaying) {
-                return;
-            }
-            isPlaying = true;
-            string filePath = FileNameTextBox.Text + ".oreshnik";
+        private List<string> GetNotesInFile(string filePath) {
+            List<string> notesInFile = new List<string>();
             try {
                 using (StreamReader reader = new StreamReader(filePath)) {
-                    playedNotes = new List<string>();
                     string line;
                     while ((line = reader.ReadLine()) != null) {
-                        playedNotes.Add(line);
+                        notesInFile.Add(line);
                     }
                 }
             }
             catch (Exception ex) {
                 MessageBox.Show($"Ошибка при загрузке нот: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            return notesInFile;
+        }
+
+        private async void PlaySongByPath(string filePath) {
+            List<string> notesInFile = GetNotesInFile(filePath);
             int lastTime = 0;
             int deltaTime = 0;
             Button button = null;
-            foreach (string note in playedNotes) {
+            foreach (string note in notesInFile) {
                 string[] parts = note.Split(':');
                 if (parts.Length == 3) {
                     if (int.TryParse(parts[0], out int semitoneOffset) && int.TryParse(parts[1], out int delay)) {
@@ -525,10 +536,8 @@ namespace Digital_Piano {
                         button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                         button.Background = new SolidColorBrush(Color.FromRgb(150, 150, 150));
                         button.BorderBrush = new SolidColorBrush(Color.FromRgb(136, 136, 136));
-                        Task.Delay(piano.NotePlayTime()).ContinueWith(_ =>
-                        {
-                            Dispatcher.Invoke(() =>
-                            {
+                        Task.Delay(piano.NotePlayTime()).ContinueWith(_ => {
+                            Dispatcher.Invoke(() => {
                                 if (button.Name.Length == 2) {
                                     button.Background = new SolidColorBrush(Colors.White);
                                 }
@@ -541,6 +550,68 @@ namespace Digital_Piano {
                     }
                 }
             }
+        }
+
+        private void PlayRecordingClick(object sender, RoutedEventArgs e) {
+            if (isPlaying) {
+                return;
+            }
+            isPlaying = true;
+            string filePath = FileNameTextBox.Text + ".oreshnik";
+            PlaySongByPath(filePath);
+            isPlaying = false;
+        }
+
+        private void DifficultySliderChanged(object sender, RoutedEventArgs e) {
+            if (DifficultySlider != null) {
+                difficultyLevel = (int)DifficultySlider.Value;
+            }
+        }
+
+        private List<int> GetOffsets(List<string> notes) {
+            List<int> offsets = new List<int>();  
+            foreach (string note in notes) {
+                string[] parts = note.Split(':');
+                if (parts.Length == 3) {
+                    if (int.TryParse(parts[0], out int semitoneOffset) && int.TryParse(parts[1], out int delay)) {
+                        offsets.Add(semitoneOffset);
+                    }
+                }
+            }
+            return offsets;
+        }
+
+        private async void StartGameClick(object sender, RoutedEventArgs e) {
+            if (!isGameEnabled) {
+                if (isPlaying) {
+                    return;
+                }
+                isPlaying = true;
+                cancellationTokenSource = new CancellationTokenSource();
+                string filePath = gameSongsPaths[difficultyLevel];
+                List<int> offsets = GetOffsets(GetNotesInFile(filePath));
+                int lenght = offsets.Count;
+                while (true) {
+                    PlaySongByPath(filePath);
+                    await Task.Delay(10000);
+                    MessageBox.Show("Повторите мелодию");
+                    for (int note = 0; note < lenght; note++) {
+                        bool isNoteCorrect = await WaitForUserInput(offsets[note], cancellationTokenSource.Token);
+                        if (!isNoteCorrect) {
+                            await Task.Delay(200);
+                            MessageBox.Show("Попробуйте еще раз!");
+                            break;
+                        }
+                    }
+                    break;
+                }
+                await Task.Delay(200);
+                MessageBox.Show("Вы выиграли!");
+            }
+            else {
+                cancellationTokenSource?.Cancel();
+            }
+            isGameEnabled = !isGameEnabled;
             isPlaying = false;
         }
 

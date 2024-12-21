@@ -350,7 +350,7 @@
     </Window.Resources>
 
 
-    <Grid>
+    <Grid Height="Auto">
 
         <Button x:Name="ToggleMenuButton"
         Content="НАСТРОЙКИ"
@@ -363,7 +363,7 @@
         Style="{StaticResource RibbonButtonStyle}"
         Click="ToggleMenuButton_Click"/>
 
-        <Grid x:Name="MainContent">
+        <Grid x:Name="MainContent" Height="Auto">
 
             <Grid x:Name="BasicConrols" Margin="100">
                 <Grid.ColumnDefinitions>
@@ -696,8 +696,9 @@
             </Grid>
 
 
-            <Grid x:Name="Recordings" Margin="100, 600, 100, 100">
+            <Grid x:Name="Recordings" Margin="100, 600, 100, 0">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -760,7 +761,7 @@
                                 Padding="0"
                                 Style="{StaticResource SideBarMenuButtonStyle}"
                                 FontSize="18"
-                                Click="PlayRecordingClick"> 
+                                Click="PlayRecordingClick">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
                                         <Border Background="{TemplateBinding Background}"
@@ -773,6 +774,90 @@
                                 </Button.Template>
                             </Button>
                         </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel x:Name="GamePanel" Grid.Column="4" VerticalAlignment="Top" Height="Auto">
+                    <Border Style="{StaticResource ControlsContainerStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Игра 'Повтори мелодию'" Style="{StaticResource LabelText}" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center"/>
+                            <Button x:Name="StartGameButton" Grid.Column="0" Grid.Row="1"
+                                    Content="СЫГРАТЬ"
+                                    Width="120"
+                                    Height="50"
+                                    Margin="0,0,20,0"
+                                    Padding="0"
+                                    Style="{StaticResource SideBarMenuButtonStyle}"
+                                    FontSize="18"
+                                    Click="StartGameClick">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="15">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <TextBlock Text="СЛОЖНОСТЬ" Grid.Column="1" Grid.Row="1" Style="{StaticResource LabelText}"/>
+                            <Slider x:Name="DifficultySlider"
+                                    Grid.Column="1"
+                                    Grid.Row="2"
+                                    Minimum="1"
+                                    Maximum="3"
+                                    Value="1"
+                                    TickFrequency="1"
+                                    IsSnapToTickEnabled="True"
+                                    AutoToolTipPlacement="TopLeft"
+                                    AutoToolTipPrecision="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Top"
+                                    Width="150"
+                                    Height="30"
+                                    ValueChanged="DifficultySliderChanged">
+                                <Slider.Resources>
+                                    <Style TargetType="Thumb" BasedOn="{StaticResource SliderThumbStyle}" />
+                                    <Style TargetType="Border" BasedOn="{StaticResource ContainerStyle}" />
+                                </Slider.Resources>
+                                <Slider.Template>
+                                    <ControlTemplate TargetType="Slider">
+                                        <Grid>
+                                            <Track Name="PART_Track">
+                                                <Track.DecreaseRepeatButton>
+                                                    <RepeatButton Command="Slider.DecreaseLarge" 
+                                                          Style="{x:Null}" 
+                                                          IsEnabled="False" 
+                                                          Height="4" 
+                                                          Background="#eae1d2"/>
+                                                </Track.DecreaseRepeatButton>
+                                                <Track.IncreaseRepeatButton>
+                                                    <RepeatButton Command="Slider.IncreaseLarge" 
+                                                          Style="{x:Null}" 
+                                                          IsEnabled="False" 
+                                                          Height="4" 
+                                                          Background="#eae1d2"/>
+                                                </Track.IncreaseRepeatButton>
+                                                <Track.Thumb>
+                                                    <Thumb Style="{StaticResource SliderThumbStyle}" VerticalAlignment="Center" />
+                                                </Track.Thumb>
+                                            </Track>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Slider.Template>
+                            </Slider>
+                        </Grid>
                     </Border>
                 </StackPanel>
 
