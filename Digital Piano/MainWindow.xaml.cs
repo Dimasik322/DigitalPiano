@@ -51,9 +51,9 @@ namespace Digital_Piano {
         private static readonly int[] time_sig = new int[] { 3, 4, 5, 6, 7 };
 
         private Dictionary<int, string> gameSongsPaths = new Dictionary<int, string> {
-            { 1, "easy.oreshnik" },
-            { 2, "medium.oreshnik" },
-            { 3 , "hard.oreshnik" }
+            { 1, "easy.notes" },
+            { 2, "medium.notes" },
+            { 3 , "hard.notes" }
         };
 
         private Dictionary<Key, Button> keyButtonMap;
@@ -64,7 +64,6 @@ namespace Digital_Piano {
             public string Key { get; set; }
             public string ButtonName { get; set; }
         }
-
 
         private void InitializeKeyButtonMap() {
             string jsonFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KeyMap.json");
@@ -461,6 +460,7 @@ namespace Digital_Piano {
                 int randomNote = GetRandomNote();
                 await piano.PlayCachedTone(randomNote);
                 bool isCorrect = await WaitForUserInput(randomNote, cancellationToken);
+                await Task.Delay(200);
                 if (isCorrect) {
                     MessageBox.Show("Вы выиграли!");
                 }
@@ -490,7 +490,7 @@ namespace Digital_Piano {
         }
 
         private void SaveRecordingClick(object sender, RoutedEventArgs e) {
-            string filePath = FileNameTextBox.Text + ".oreshnik";
+            string filePath = FileNameTextBox.Text + ".notes";
             try {
                 using (StreamWriter writer = new StreamWriter(filePath)) {
                     foreach (string note in playedNotes) {
@@ -515,7 +515,7 @@ namespace Digital_Piano {
                 }
             }
             catch (Exception ex) {
-                MessageBox.Show($"Ошибка при загрузке нот: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка при загрузке нот: Не найден Файл {filePath}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             return notesInFile;
         }
@@ -557,7 +557,7 @@ namespace Digital_Piano {
                 return;
             }
             isPlaying = true;
-            string filePath = FileNameTextBox.Text + ".oreshnik";
+            string filePath = FileNameTextBox.Text + ".notes";
             PlaySongByPath(filePath);
             isPlaying = false;
         }
@@ -599,14 +599,20 @@ namespace Digital_Piano {
                         bool isNoteCorrect = await WaitForUserInput(offsets[note], cancellationTokenSource.Token);
                         if (!isNoteCorrect) {
                             await Task.Delay(200);
-                            MessageBox.Show("Попробуйте еще раз!");
+                            if (note > lenght / 2) {
+                                MessageBox.Show($"Вы сыграли правильно {note} из {lenght}. Почти получилось!");
+                            }
+                            else {
+                                MessageBox.Show($"Вы сыграли правильно {note} из {lenght}. Попробуйте еще раз!");
+                            }
                             break;
                         }
                     }
+                    await Task.Delay(200);
+                    MessageBox.Show("Вы выиграли!");
                     break;
                 }
-                await Task.Delay(200);
-                MessageBox.Show("Вы выиграли!");
+
             }
             else {
                 cancellationTokenSource?.Cancel();
